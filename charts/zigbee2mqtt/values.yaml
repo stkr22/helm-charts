@@ -1,0 +1,76 @@
+replicaCount: 1
+
+image:
+  repository: koenkk/zigbee2mqtt
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# must have key with configuration.yaml
+backup:
+  enable: false
+  minio:
+    hostname: ""
+    secretName: ""
+    bucketName: ""
+  cron: "* * * * *"
+
+env: []
+
+persistence:
+  enabled: false
+  size: 2Gi
+  mountPath: /data
+
+usb:
+  hostPath: /dev/ttyACM0
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  privileged: true
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: zigbee2mqtt.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  # limits:
+  #   cpu: 210m
+  #   memory: 240Mi
+  # requests:
+  #   cpu: 70m
+  #   memory: 80Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

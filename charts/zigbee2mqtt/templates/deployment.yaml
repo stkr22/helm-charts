@@ -1,0 +1,149 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "zigbee2mqtt.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "zigbee2mqtt.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "zigbee2mqtt.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "zigbee2mqtt.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.backup.enabled }}
+      initContainers:
+        - name: {{ include "zigbee2mqtt.fullname" . }}-backup-restore-download
+          image: minio/mc
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: M_HOSTNAME
+            value: "{{ .Values.backup.minio.hostname }}"
+          - name: M_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.backup.minio.secretName }}"
+                key: accesskey
+          - name: M_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.backup.minio.secretName }}"
+                key: secretkey
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - if ! [ -f "/config-data/configuration.yaml" ]; then
+              mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+              mc cp minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz /backup/;
+              fi;
+          volumeMounts:
+          - name: backup-restore-dir
+            mountPath: /backup
+          - name: config-data
+            mountPath: /config-data
+        - name: {{ include "zigbee2mqtt.fullname" . }}-backup-restore-decompress
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - if [ -f "/backup/zigbee2mqtt_config_backup_latest.tar.gz" ]; then
+              echo "decompressing...";
+              tar -xzf /backup/zigbee2mqtt_config_backup_latest.tar.gz -C /{{ .Values.persistence.mountPath }};
+              fi;
+          volumeMounts:
+          - name: config-data
+            mountPath: {{ .Values.persistence.mountPath }}
+          - name: backup-restore-dir
+            mountPath: /backup
+      {{- end }}
+      containers:
+        - name: {{ include "zigbee2mqtt.fullname" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            {{- if .Values.persistence.enabled }}
+            - name: ZIGBEE2MQTT_DATA
+              value: {{ .Values.persistence.mountPath }}
+            {{- end }}
+            {{- toYaml .Values.env | nindent 12 }}
+          volumeMounts:
+            - name: config-data
+              mountPath: {{ .Values.persistence.mountPath }}
+            - name: usb
+              mountPath: /dev/ttyACM0
+            - name: udev
+              mountPath: /run/udev
+          livenessProbe:
+            httpGet:
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 15
+            failureThreshold: 3
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            periodSeconds: 60
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 0
+            failureThreshold: 30
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "zigbee2mqtt.fullname" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: usb
+          hostPath:
+            type: CharDevice
+            path: {{ .Values.usb.hostPath }}
+        - name: udev
+          hostPath:
+            path: /run/udev
+        - name: backup-restore-dir
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
