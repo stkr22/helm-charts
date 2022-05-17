@@ -7,7 +7,7 @@ image:
 
 # must have key with configuration.yaml
 backup:
-  enable: false
+  enabled: false
   minio:
     hostname: ""
     secretName: ""
@@ -22,6 +22,7 @@ persistence:
   mountPath: /data
 
 usb:
+  enabled: false
   hostPath: /dev/ttyACM0
 
 imagePullSecrets: []

@@ -94,10 +94,12 @@ spec:
           volumeMounts:
             - name: config-data
               mountPath: {{ .Values.persistence.mountPath }}
+            {{- if .Values.usb.enabled }}
             - name: usb
               mountPath: /dev/ttyACM0
             - name: udev
               mountPath: /run/udev
+            {{- end }}
           livenessProbe:
             httpGet:
               port: {{ .Values.service.port }}
@@ -126,6 +128,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        {{- if .Values.usb.enabled }}
         - name: usb
           hostPath:
             type: CharDevice
@@ -133,6 +136,7 @@ spec:
         - name: udev
           hostPath:
             path: /run/udev
+        {{- end }}
         - name: backup-restore-dir
           emptyDir: {}
       {{- with .Values.nodeSelector }}
