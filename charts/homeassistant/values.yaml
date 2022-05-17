@@ -35,6 +35,7 @@ securityContext: {}
   # runAsUser: 1000
 
 postgres:
+  enable: false
   host: ha-postgres
   user: homeassistant
   password: savepassword

@@ -11,12 +11,12 @@ data:
     # Text to speech
     tts:
       - platform: google_translate
-
+    {{- if .Values.postgres.enabled }}
     recorder:
       purge_keep_days: 30
       commit_interval: 3
       db_url: postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.postgres.host }}/ha_recorder
-
+    {{- end }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
