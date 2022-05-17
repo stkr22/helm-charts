@@ -1,4 +1,4 @@
-{{- if .Values.persistence.enabled and .Values.backup.enabled }}
+{{- if and (.Values.persistence.enabled) (.Values.backup.enabled) }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
