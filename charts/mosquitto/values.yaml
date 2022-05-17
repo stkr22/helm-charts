@@ -5,7 +5,7 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-env: {}
+env: []
 
 persistence:
   enabled: false
