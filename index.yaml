@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   mosquitto:
   - apiVersion: v2
+    appVersion: 2.0.14
+    created: "2022-05-17T15:33:50.800342989Z"
+    description: A Helm chart for Kubernetes
+    digest: 97ededde02f1bf610639e81739b50bc394743d8a29ca100dec1306f6907e1b05
+    name: mosquitto
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/mosquitto-0.1.1/mosquitto-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2022-05-17T14:44:46.391628388Z"
     description: A Helm chart for Kubernetes
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/mosquitto-0.1.0/mosquitto-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-17T14:44:46.391633082Z"
+generated: "2022-05-17T15:33:50.80035929Z"
