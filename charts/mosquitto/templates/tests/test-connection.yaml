@@ -8,8 +8,11 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args: ['{{ include "mosquitto.fullname" . }}:{{ .Values.service.port }}']
+    - name: mosquitto-test
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      command:
+        - /bin/sh
+        - '-c'
+      args:
+        - "mosquitto_sub -h {{ include "mosquitto.fullname" . }} -p {{ .Values.service.port }} -t 'topic' -C 1 -E -i probe -W 3"
   restartPolicy: Never
