@@ -1,0 +1,62 @@
+{{- if and (.Values.persistence.enabled) (.Values.backup.enabled) }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "zigbee2mqtt.fullname" . }}-backup
+spec:
+  schedule: "{{ .Values.config.cron }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ include "zigbee2mqtt.fullname" . }}-backup-upload
+            image: minio/mc
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: M_HOSTNAME
+              value: {{ .Values.backup.minio.hostname }}
+            - name: M_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backup.minio.secretName }}
+                  key: accesskey
+            - name: M_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backup.minio.secretName }}
+                  key: secretkey
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+                mc rm minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz;
+                mc cp /backup/zigbee2mqtt_config_backup_*.tar.gz minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/;
+            volumeMounts:
+            - name: backup-dir
+              mountPath: /backup
+          initContainers:
+          - name: {{ include "zigbee2mqtt.fullname" . }}-backup-compress
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - timestamp=$(date +"%Y%m%dT%H%M");
+                tar --directory={{ .Values.persistence.mountPath }} -czf /backup/zigbee2mqtt_config_backup_$timestamp.tar.gz .;
+                cp /backup/zigbee2mqtt_config_backup_$timestamp.tar.gz /backup/zigbee2mqtt_config_backup_latest.tar.gz;
+            volumeMounts:
+            - name: config-data
+              mountPath: {{ .Values.persistence.mountPath }}
+            - name: backup-dir
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup-dir
+            emptyDir: {}
+          - name: config-data
+            persistentVolumeClaim:
+              claimName: {{ include "zigbee2mqtt.fullname" . }}
+{{- end }}
