@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mosquitto.fullname" . }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+  labels:
+    app.kubernetes.io/name: {{ include "mosquitto.fullname" . }}
+data:
+  mosquitto.conf: |
+    listener {{ .Values.service.port }}
+    allow_anonymous true
+    persistence true
+    persistence_location {{ .Values.persistence.mountPath }}
+    autosave_interval 1800
