@@ -51,6 +51,26 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Common labels postgres
+*/}}
+{{- define "homeassistant.postgres.labels" -}}
+helm.sh/chart: {{ include "homeassistant.chart" . }}
+{{ include "homeassistant.postgres.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels postgres
+*/}}
+{{- define "homeassistant.postgres.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "homeassistant.name" . }}-db
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "homeassistant.serviceAccountName" -}}

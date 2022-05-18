@@ -15,7 +15,7 @@ data:
     recorder:
       purge_keep_days: 30
       commit_interval: 3
-      db_url: postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.postgres.host }}/ha_recorder
+      db_url: postgresql://PGUSER:PGPASSWORD@{{ template "homeassistant.fullname" . }}-db/ha_recorder
     {{- end }}
     http:
       use_x_forwarded_for: true
