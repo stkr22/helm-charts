@@ -3,6 +3,16 @@ entries:
   homeassistant:
   - apiVersion: v2
     appVersion: stable
+    created: "2022-05-18T15:10:35.184915901Z"
+    description: A Helm chart for Kubernetes
+    digest: 580f567ac8cdf37667f70ec2c99df702d9aaf768a6b1dbc01790b64f338bf6ac
+    name: homeassistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/homeassistant-0.2.0/homeassistant-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: stable
     created: "2022-05-17T16:01:58.802957942Z"
     description: A Helm chart for Kubernetes
     digest: 9ea87088b161ccba049de8fdcc595025b3bc2e56b617672c22e1058d1b97dcd6
@@ -43,4 +53,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-17T19:30:04.770106039Z"
+generated: "2022-05-18T15:10:35.184925301Z"
