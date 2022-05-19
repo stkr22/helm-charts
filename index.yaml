@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  fullstack:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2022-05-19T19:43:44.710504834Z"
+    description: A Helm chart for Kubernetes
+    digest: 4c23f646582c06e10bf99be13553b96b600d2a19ade383038bb7fd7052c6db28
+    name: fullstack
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/fullstack-0.1.0/fullstack-0.1.0.tgz
+    version: 0.1.0
   homeassistant:
   - apiVersion: v2
     appVersion: stable
@@ -53,4 +64,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-18T15:10:35.184925301Z"
+generated: "2022-05-19T19:43:44.710515234Z"
