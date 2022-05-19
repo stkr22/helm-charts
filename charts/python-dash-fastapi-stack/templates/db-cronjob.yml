@@ -1,0 +1,80 @@
+{{- if .Values.postgres.persistence.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "fullstack.fullname" . }}-db-backup
+spec:
+  schedule: "5 00 10,20 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: postgres-backup-upload
+            image: minio/mc
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: M_HOSTNAME
+              value: {{ .Values.postgres.persistence.backup.minioHostname }}
+            - name: M_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.persistence.backup.existingSecretMinio }}
+                  key: accesskey
+            - name: M_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.persistence.backup.existingSecretMinio }}
+                  key: secretkey
+            command:
+            - /bin/sh
+            - -c
+            args:
+              - mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+                mc rm minio/{{ .Values.postgres.persistence.backup.minioBucketName }}/{{ include "fullstack.fullname" . }}/postgres_{{ include "fullstack.fullname" . }}_latest.sql.gz;
+                mc cp /backup/postgres_{{ include "fullstack.fullname" . }}_*.sql.gz minio/{{ .Values.postgres.persistence.backup.minioBucketName }}/{{ include "fullstack.fullname" . }}/;
+            volumeMounts:
+            - name: backup-dir
+              mountPath: /backup
+          initContainers:
+          - name: postgres-backup-dump
+            image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: POSTGRES_DB
+              value: backend
+            - name: POSTGRES_SERVER
+              value: {{ include "fullstack.fullname" . }}-db
+            - name: POSTGRES_PASSWORD
+              {{- if .Values.postgres.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.existingSecret }}
+                  key: postgresql-password
+              {{- else }}
+              value: {{ .Values.postgres.password }}
+              {{- end }}
+            - name: POSTGRES_USER
+              {{- if .Values.postgres.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.existingSecret }}
+                  key: postgresql-username
+              {{- else }}
+              value: {{ .Values.postgres.user }}
+              {{- end }}
+            command:
+            - /bin/sh
+            - -c
+            args:
+              - timestamp=$(date +"%Y%m%dT%H%M");
+                PGPASSWORD=$POSTGRES_PASSWORD PGUSER=$POSTGRES_USER PGDATABASE=$POSTGRES_DB PGHOST=$POSTGRES_SERVER pg_dump --data-only --no-owner --compress=3 > /backup/postgres_{{ include "fullstack.fullname" . }}_$timestamp.sql.gz;
+                cp /backup/postgres_{{ include "fullstack.fullname" . }}_$timestamp.sql.gz /backup/postgres_{{ include "fullstack.fullname" . }}_latest.sql.gz;
+            volumeMounts:
+            - name: backup-dir
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup-dir
+            emptyDir: {}
+{{- end }}

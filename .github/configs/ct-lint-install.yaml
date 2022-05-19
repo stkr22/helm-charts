@@ -10,4 +10,4 @@ validate-chart-schema: false
 validate-maintainers: false
 validate-yaml: true
 exclude-deprecated: true
-excluded-charts: ["zigbee2mqtt"]
+excluded-charts: ["zigbee2mqtt", "python-dash-fastapi-stack"]
