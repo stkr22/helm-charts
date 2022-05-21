@@ -3,6 +3,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "mosquitto.fullname" . }}
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
 spec:
   accessModes:
   - ReadWriteOnce
