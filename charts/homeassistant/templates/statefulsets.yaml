@@ -59,6 +59,35 @@ spec:
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- if .Values.postgres.persistence.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+              args:
+                - pg_isready
+            initialDelaySeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 2
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+              args:
+                - pg_isready
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            timeoutSeconds: 2
+            periodSeconds: 15
+          startupProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 0
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
