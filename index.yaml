@@ -3,6 +3,16 @@ entries:
   fullstack:
   - apiVersion: v2
     appVersion: latest
+    created: "2022-05-21T06:50:18.92196816Z"
+    description: A Helm chart for Kubernetes
+    digest: fe5ff3ce7a415d974dd4f5ed95796fb665b28ce04db4ce971109b8211cadbd86
+    name: fullstack
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/fullstack-0.2.0/fullstack-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: latest
     created: "2022-05-19T19:43:44.710504834Z"
     description: A Helm chart for Kubernetes
     digest: 4c23f646582c06e10bf99be13553b96b600d2a19ade383038bb7fd7052c6db28
@@ -12,6 +22,16 @@ entries:
     - https://github.com/stkr22/helm-charts/releases/download/fullstack-0.1.0/fullstack-0.1.0.tgz
     version: 0.1.0
   homeassistant:
+  - apiVersion: v2
+    appVersion: 2022.5.5
+    created: "2022-05-21T06:50:19.030889293Z"
+    description: A Helm chart for Kubernetes
+    digest: 48377c94d7f1426289b9716337d53d06fa0a2c2303fd51799b9433403660da05
+    name: homeassistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/homeassistant-0.4.0/homeassistant-0.4.0.tgz
+    version: 0.4.0
   - apiVersion: v2
     appVersion: 2022.5.5
     created: "2022-05-21T06:00:03.840876214Z"
@@ -76,6 +96,16 @@ entries:
   pigallery2:
   - apiVersion: v2
     appVersion: 1.9.3-alpine
+    created: "2022-05-21T06:50:19.140472926Z"
+    description: A Helm chart for Kubernetes
+    digest: c6bf767301234362d8d5b9b5ff2288db1997c143339a1a48fbee354d7659cfcf
+    name: pigallery2
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/pigallery2-0.2.0/pigallery2-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.9.3-alpine
     created: "2022-05-21T06:00:04.119236284Z"
     description: A Helm chart for Kubernetes
     digest: e1620027c9c3cecb2cf510292ea90472881787748d6f835fc91dd3e4109e369a
@@ -95,4 +125,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-21T06:00:04.119258784Z"
+generated: "2022-05-21T06:50:19.140504227Z"
