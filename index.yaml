@@ -13,6 +13,16 @@ entries:
     version: 0.1.0
   homeassistant:
   - apiVersion: v2
+    appVersion: 2022.5.5
+    created: "2022-05-21T06:00:03.840876214Z"
+    description: A Helm chart for Kubernetes
+    digest: 2994b0681585fb56c7f58b08fa1c5f69d360de19c20565a010776828b0de6333
+    name: homeassistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/homeassistant-0.3.0/homeassistant-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: stable
     created: "2022-05-18T15:10:35.184915901Z"
     description: A Helm chart for Kubernetes
@@ -35,6 +45,16 @@ entries:
   mosquitto:
   - apiVersion: v2
     appVersion: 2.0.14
+    created: "2022-05-21T06:00:03.966046699Z"
+    description: A Helm chart for Kubernetes
+    digest: 3185eeaa1af57216ff118580ec040bef3a9ef9cc242b72886bfa8bf3caf77355
+    name: mosquitto
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/mosquitto-0.2.0/mosquitto-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 2.0.14
     created: "2022-05-17T15:33:50.800342989Z"
     description: A Helm chart for Kubernetes
     digest: 97ededde02f1bf610639e81739b50bc394743d8a29ca100dec1306f6907e1b05
@@ -53,6 +73,17 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/mosquitto-0.1.0/mosquitto-0.1.0.tgz
     version: 0.1.0
+  pigallery2:
+  - apiVersion: v2
+    appVersion: 1.9.3-alpine
+    created: "2022-05-21T06:00:04.119236284Z"
+    description: A Helm chart for Kubernetes
+    digest: e1620027c9c3cecb2cf510292ea90472881787748d6f835fc91dd3e4109e369a
+    name: pigallery2
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/pigallery2-0.1.0/pigallery2-0.1.0.tgz
+    version: 0.1.0
   zigbee2mqtt:
   - apiVersion: v2
     appVersion: 1.25.1
@@ -64,4 +95,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-19T19:43:44.710515234Z"
+generated: "2022-05-21T06:00:04.119258784Z"
