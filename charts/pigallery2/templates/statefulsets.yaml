@@ -1,0 +1,107 @@
+{{- if .Values.db.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "pigallery2.fullname" . }}-db
+  labels:
+    {{- include "pigallery2.db.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "pigallery2.fullname" . }}-db
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "pigallery2.db.selectorLabels" . | nindent 8 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pigallery2.db.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: mariadb
+          image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}"
+          imagePullPolicy: {{ .Values.db.image.pullPolicy }}
+          ports:
+            - name: db
+              containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              {{- if .Values.db.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: mysql-root-password
+              {{- else }}
+              value: {{ .Values.db.rootPassword }}
+              {{- end }}
+            - name: MYSQL_PASSWORD
+              {{- if .Values.db.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: mysql-password
+              {{- else }}
+              value: {{ .Values.db.password }}
+              {{- end }}
+            - name: MYSQL_USER
+              {{- if .Values.db.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: mysql-username
+              {{- else }}
+              value: {{ .Values.db.user }}
+              {{- end }}
+            - name: MYSQL_DATABASE
+              value: pigallery2
+            {{- with .Values.db.env }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- if .Values.db.persistence.enabled }}
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/mysql
+          {{- end }}
+          resources:
+            {{- toYaml .Values.db.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- if and (.Values.db.persistence.enabled) (not .Values.db.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: db-data
+      spec:
+        accessModes:
+          - {{ .Values.db.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.db.persistence.size }}
+{{- else }}
+      volumes:
+        - name: db-data
+      {{- if .Values.db.persistence.existingClaim }}
+            persistentVolumeClaim:
+              claimName: {{ .Values.db.persistence.existingClaim }}
+      {{- else }}
+            emptyDir: {}
+      {{- end }}
+{{- end }}
+{{- end }}
