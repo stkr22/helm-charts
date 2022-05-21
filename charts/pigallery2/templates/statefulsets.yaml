@@ -75,29 +75,23 @@ spec:
               command:
                 - /bin/sh
                 - '-c'
-              args:
                 - /usr/local/bin/healthcheck.sh --connect
             initialDelaySeconds: 30
             failureThreshold: 3
-            timeoutSeconds: 2
             periodSeconds: 60
           readinessProbe:
             exec:
               command:
                 - /bin/sh
                 - '-c'
-              args:
                 - /usr/local/bin/healthcheck.sh --connect
             initialDelaySeconds: 10
             failureThreshold: 5
-            timeoutSeconds: 2
-            periodSeconds: 15
+            periodSeconds: 10
           startupProbe:
             tcpSocket:
               port: 3306
-            initialDelaySeconds: 0
             failureThreshold: 30
-            timeoutSeconds: 1
             periodSeconds: 5
           resources:
             {{- toYaml .Values.db.resources | nindent 12 }}
