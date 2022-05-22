@@ -45,14 +45,14 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.backup.minio.secretName }}"
                   key: secretkey
-            command:
-              - /bin/sh
-              - -c
-            args:
-              - if ! [ -f "/config-data/configuration.yaml" ]; then
-                mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
-                mc cp minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz /backup/;
-                fi;
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - if ! [ -f "/config-data/configuration.yaml" ]; then
+              mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+              mc cp minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz /backup/;
+              fi;
           volumeMounts:
             - name: backup-restore-dir
               mountPath: /backup
