@@ -29,7 +29,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.backup.enabled }}
       initContainers:
-        - name: {{ include "zigbee2mqtt.fullname" . }}-backup-restore-download
+        - name: zigbee2mqtt-backup-restore-download
           image: minio/mc
           imagePullPolicy: IfNotPresent
           env:
@@ -58,7 +58,7 @@ spec:
               mountPath: /backup
             - name: config-data
               mountPath: /config-data
-        - name: {{ include "zigbee2mqtt.fullname" . }}-backup-restore-decompress
+        - name: zigbee2mqtt-backup-restore-decompress
           image: busybox
           imagePullPolicy: IfNotPresent
           command:
@@ -76,21 +76,25 @@ spec:
               mountPath: /backup
       {{- end }}
       containers:
-        - name: {{ include "zigbee2mqtt.fullname" . }}
+        - name: zigbee2mqtt
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 8080
               protocol: TCP
           env:
             {{- if .Values.persistence.enabled }}
             - name: ZIGBEE2MQTT_DATA
               value: {{ .Values.persistence.mountPath }}
             {{- end }}
-            {{- toYaml .Values.env | nindent 12 }}
+            - name: ZIGBEE2MQTT_CONFIG_FRONTEND_PORT
+              value: 8080
+            {{- with .Values.env }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           volumeMounts:
             - name: config-data
               mountPath: {{ .Values.persistence.mountPath }}

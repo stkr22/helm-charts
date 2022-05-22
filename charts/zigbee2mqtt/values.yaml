@@ -14,7 +14,9 @@ backup:
     bucketName: ""
   cron: "* * * * *"
 
-env: []
+env:
+  - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
+    value: mqtt://mosquitto
 
 persistence:
   enabled: true
@@ -46,7 +48,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 80
 
 ingress:
   enabled: true
