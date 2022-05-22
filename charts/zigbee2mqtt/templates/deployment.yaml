@@ -33,31 +33,31 @@ spec:
           image: minio/mc
           imagePullPolicy: IfNotPresent
           env:
-          - name: M_HOSTNAME
-            value: "{{ .Values.backup.minio.hostname }}"
-          - name: M_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.backup.minio.secretName }}"
-                key: accesskey
-          - name: M_SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Values.backup.minio.secretName }}"
-                key: secretkey
-          command:
-            - /bin/sh
-            - -c
-          args:
-            - if ! [ -f "/config-data/configuration.yaml" ]; then
-              mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
-              mc cp minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz /backup/;
-              fi;
+            - name: M_HOSTNAME
+              value: "{{ .Values.backup.minio.hostname }}"
+            - name: M_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.backup.minio.secretName }}"
+                  key: accesskey
+            - name: M_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.backup.minio.secretName }}"
+                  key: secretkey
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - if ! [ -f "/config-data/configuration.yaml" ]; then
+                mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+                mc cp minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz /backup/;
+                fi;
           volumeMounts:
-          - name: backup-restore-dir
-            mountPath: /backup
-          - name: config-data
-            mountPath: /config-data
+            - name: backup-restore-dir
+              mountPath: /backup
+            - name: config-data
+              mountPath: /config-data
         - name: {{ include "zigbee2mqtt.fullname" . }}-backup-restore-decompress
           image: busybox
           imagePullPolicy: IfNotPresent
@@ -70,10 +70,10 @@ spec:
               tar -xzf /backup/zigbee2mqtt_config_backup_latest.tar.gz -C /{{ .Values.persistence.mountPath }};
               fi;
           volumeMounts:
-          - name: config-data
-            mountPath: {{ .Values.persistence.mountPath }}
-          - name: backup-restore-dir
-            mountPath: /backup
+            - name: config-data
+              mountPath: {{ .Values.persistence.mountPath }}
+            - name: backup-restore-dir
+              mountPath: /backup
       {{- end }}
       containers:
         - name: {{ include "zigbee2mqtt.fullname" . }}
@@ -103,15 +103,15 @@ spec:
           livenessProbe:
             httpGet:
               port: {{ .Values.service.port }}
-            initialDelaySeconds: 15
+            initialDelaySeconds: 30
             failureThreshold: 3
             periodSeconds: 60
           readinessProbe:
             httpGet:
               port: {{ .Values.service.port }}
-            initialDelaySeconds: 0
+            initialDelaySeconds: 15
             failureThreshold: 3
-            periodSeconds: 60
+            periodSeconds: 30
           startupProbe:
             tcpSocket:
               port: {{ .Values.service.port }}
