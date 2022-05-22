@@ -65,6 +65,16 @@ entries:
   mosquitto:
   - apiVersion: v2
     appVersion: 2.0.14
+    created: "2022-05-22T07:30:10.752416444Z"
+    description: A Helm chart for Kubernetes
+    digest: 179c5b8e25de9349c81a41f833593c0868385b2102a714159a48663823d141ca
+    name: mosquitto
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/mosquitto-0.3.0/mosquitto-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: 2.0.14
     created: "2022-05-21T06:00:03.966046699Z"
     description: A Helm chart for Kubernetes
     digest: 3185eeaa1af57216ff118580ec040bef3a9ef9cc242b72886bfa8bf3caf77355
@@ -135,4 +145,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-22T05:46:45.655710278Z"
+generated: "2022-05-22T07:30:10.752441847Z"
