@@ -17,9 +17,10 @@ backup:
 env: []
 
 persistence:
-  enabled: false
+  enabled: true
   size: 2Gi
   mountPath: /data
+  accessMode: ReadWriteOnce
 
 usb:
   enabled: false
