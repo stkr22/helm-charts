@@ -106,19 +106,19 @@ spec:
             {{- end }}
           livenessProbe:
             httpGet:
-              port: {{ .Values.service.port }}
+              port: http
             initialDelaySeconds: 30
             failureThreshold: 3
             periodSeconds: 60
           readinessProbe:
             httpGet:
-              port: {{ .Values.service.port }}
+              port: http
             initialDelaySeconds: 15
             failureThreshold: 3
             periodSeconds: 30
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.port }}
+              port: http
             initialDelaySeconds: 0
             failureThreshold: 30
             periodSeconds: 5
