@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: {{ include "zigbee2mqtt.fullname" . }}-backup
 spec:
-  schedule: "{{ .Values.config.cron }}"
+  schedule: "{{ .Values.backup.cron }}"
   jobTemplate:
     spec:
       template:
