@@ -10,5 +10,5 @@ spec:
   - {{ .Values.pigallery2.persistence.configAccessMode }}
   resources:
     requests:
-      storage: {{ .Values.pigallery2.persistence.mediaSize }}
+      storage: {{ .Values.pigallery2.persistence.configSize }}
 {{- end }}
