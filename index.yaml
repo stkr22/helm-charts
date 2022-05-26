@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  airsonic-advanced:
+  - apiVersion: v2
+    appVersion: edge-11.0.0-SNAPSHOT.20220418221611
+    created: "2022-05-26T22:33:28.403996738Z"
+    description: A Helm chart for Kubernetes
+    digest: 46c1141bd0c61387da6a949e48d31b0cc47e9b7fa4a5cdf99e65b1e8f6547de0
+    name: airsonic-advanced
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/airsonic-advanced-0.1.0/airsonic-advanced-0.1.0.tgz
+    version: 0.1.0
   fullstack:
   - apiVersion: v2
     appVersion: latest
@@ -185,4 +196,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-22T08:48:06.498754214Z"
+generated: "2022-05-26T22:33:28.404324139Z"
