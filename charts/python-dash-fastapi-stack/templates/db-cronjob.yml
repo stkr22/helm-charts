@@ -30,9 +30,9 @@ spec:
             - /bin/sh
             - -c
             args:
-              - mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
-                mc rm minio/{{ .Values.postgres.persistence.backup.minioBucketName }}/{{ include "fullstack.fullname" . }}/postgres_{{ include "fullstack.fullname" . }}_latest.sql.gz;
-                mc cp /backup/postgres_{{ include "fullstack.fullname" . }}_*.sql.gz minio/{{ .Values.postgres.persistence.backup.minioBucketName }}/{{ include "fullstack.fullname" . }}/;
+              - mc alias set appbackup $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+                mc rm appbackup/{{ .Values.postgres.persistence.backup.minioBucketName }}/{{ include "fullstack.fullname" . }}/postgres_{{ include "fullstack.fullname" . }}_latest.sql.gz;
+                mc cp /backup/postgres_{{ include "fullstack.fullname" . }}_*.sql.gz appbackup/{{ .Values.postgres.persistence.backup.minioBucketName }}/{{ include "fullstack.fullname" . }}/;
             volumeMounts:
             - name: backup-dir
               mountPath: /backup

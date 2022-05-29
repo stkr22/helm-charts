@@ -30,9 +30,9 @@ spec:
               - /bin/sh
               - -c
             args:
-              - mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
-                mc rm minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz;
-                mc cp /backup/zigbee2mqtt_config_backup_*.tar.gz minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/;
+              - mc alias set zigbeebackup $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+                mc rm zigbeebackup/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz;
+                mc cp /backup/zigbee2mqtt_config_backup_*.tar.gz zigbeebackup/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/;
             volumeMounts:
             - name: backup-dir
               mountPath: /backup
