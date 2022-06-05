@@ -124,6 +124,17 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/mosquitto-0.1.0/mosquitto-0.1.0.tgz
     version: 0.1.0
+  navidrome:
+  - apiVersion: v2
+    appVersion: 0.47.5
+    created: "2022-06-05T17:01:04.604564575Z"
+    description: A Helm chart for Kubernetes
+    digest: 2176369babfc8bdfd244455011dfe6713130a48d6b2caabe130ba0d5429fbf61
+    name: navidrome
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/navidrome-0.1.0/navidrome-0.1.0.tgz
+    version: 0.1.0
   pigallery2:
   - apiVersion: v2
     appVersion: 1.9.3-alpine
@@ -226,4 +237,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-29T14:16:37.727836754Z"
+generated: "2022-06-05T17:01:04.604625176Z"
