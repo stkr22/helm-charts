@@ -130,5 +130,5 @@ new password and use it.
 Defines default user.
 */}}
 {{- define "fullstack.postgres.user" -}}
-backend
+{{- "backend" | b64enc | quote -}}
 {{- end -}}
