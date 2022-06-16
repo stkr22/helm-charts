@@ -103,10 +103,16 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-generates new password if no existing secret defined.
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
 */}}
 {{- define "fullstack.postgres.password" -}}
-{{- (randAlphaNum 40) | b64enc | quote -}}
+{{- $secret := (lookup "v1" "Secret" (include "fullstack.namespace" .) (include "fullstack.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "postgresql-password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
 {{- end -}}
 
 {{/*

@@ -52,7 +52,10 @@ spec:
                   name: {{ .Values.postgres.existingSecret }}
                   key: postgresql-password
               {{- else }}
-              value: {{ .Values.postgres.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullstack.fullname" . }}
+                  key: postgresql-password
               {{- end }}
             - name: POSTGRES_USER
               {{- if .Values.postgres.existingSecret }}
@@ -61,7 +64,10 @@ spec:
                   name: {{ .Values.postgres.existingSecret }}
                   key: postgresql-username
               {{- else }}
-              value: {{ .Values.postgres.user }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullstack.fullname" . }}
+                  key: postgresql-username
               {{- end }}
             command:
             - /bin/sh

@@ -39,7 +39,10 @@ spec:
                   name: {{ .Values.postgres.existingSecret }}
                   key: postgresql-password
               {{- else }}
-              value: {{ template "fullstack.postgres.password" . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullstack.fullname" . }}
+                  key: postgresql-password
               {{- end }}
             - name: POSTGRES_USER
               {{- if .Values.postgres.existingSecret }}
@@ -48,6 +51,11 @@ spec:
                   name: {{ .Values.postgres.existingSecret }}
                   key: postgresql-username
               {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fullstack.fullname" . }}
+                  key: postgresql-username
+              {{- end }}
               value: {{ template "fullstack.postgres.user" . }}
               {{- end }}
             - name: POSTGRES_DB
