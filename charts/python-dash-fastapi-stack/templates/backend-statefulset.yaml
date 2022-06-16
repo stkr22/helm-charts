@@ -56,8 +56,6 @@ spec:
                   name: {{ template "fullstack.fullname" . }}
                   key: postgresql-username
               {{- end }}
-              value: {{ template "fullstack.postgres.user" . }}
-              {{- end }}
             - name: POSTGRES_DB
               value: backend
             - name: PGDATA
