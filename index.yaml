@@ -14,6 +14,16 @@ entries:
   fullstack:
   - apiVersion: v2
     appVersion: latest
+    created: "2022-06-16T19:20:37.318201692Z"
+    description: A Helm chart for Kubernetes
+    digest: abb71fb7b286a760252e71658040c88e91b3df8f38e6081120ca74f2724d4947
+    name: fullstack
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/fullstack-0.2.2/fullstack-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: latest
     created: "2022-05-29T14:16:37.624090523Z"
     description: A Helm chart for Kubernetes
     digest: 3592b5b53a4552dc0d5aecd9f3e17f762f9681b91986214ad7c5080b1fde909d
@@ -237,4 +247,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-05T17:01:04.604625176Z"
+generated: "2022-06-16T19:20:37.318305893Z"
