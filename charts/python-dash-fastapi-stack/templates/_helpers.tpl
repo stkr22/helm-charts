@@ -101,3 +101,17 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+generates new password if no existing secret defined.
+*/}}
+{{- define "fullstack.postgres.password" -}}
+{{- (randAlphaNum 40) | b64enc | quote -}}
+{{- end -}}
+
+{{/*
+Defines default user.
+*/}}
+{{- define "fullstack.postgres.user" -}}
+backend
+{{- end -}}

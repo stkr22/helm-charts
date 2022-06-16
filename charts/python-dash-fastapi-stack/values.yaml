@@ -29,8 +29,6 @@ postgres:
     tag: 14.2-alpine
     pullPolicy: IfNotPresent
   existingSecret: ""
-  user: postgres
-  password: savepassword
   env: []
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
