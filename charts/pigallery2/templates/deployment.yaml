@@ -30,7 +30,7 @@ spec:
       {{- if .Values.pigallery2.media.enabled }}
       initContainers:
         - name: rclone-sync
-          image: rclone/rclone:latest
+          image: rclone/rclone::1.58.1
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
