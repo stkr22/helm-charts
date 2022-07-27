@@ -50,8 +50,8 @@ spec:
             - -c
           args:
             - if ! [ -f "/config-data/configuration.yaml" ]; then
-              mc alias set minio $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
-              mc cp minio/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_config_backup_latest.tar.gz /backup/;
+              mc alias set zigbeebackup $M_HOSTNAME $M_ACCESS_KEY $M_SECRET_KEY;
+              mc cp zigbeebackup/{{ .Values.backup.minio.bucketName }}/zigbee2mqtt/zigbee2mqtt_backup_latest.zip /backup/;
               fi;
           volumeMounts:
             - name: backup-restore-dir
@@ -65,9 +65,9 @@ spec:
             - /bin/sh
             - -c
           args:
-            - if [ -f "/backup/zigbee2mqtt_config_backup_latest.tar.gz" ]; then
+            - if [ -f "/backup/zigbee2mqtt_backup_latest.zip" ]; then
               echo "decompressing...";
-              tar -xzf /backup/zigbee2mqtt_config_backup_latest.tar.gz -C /{{ .Values.persistence.mountPath }};
+              unzip /backup/zigbee2mqtt_backup_latest.zip -d {{ .Values.persistence.mountPath }};
               fi;
           volumeMounts:
             - name: config-data

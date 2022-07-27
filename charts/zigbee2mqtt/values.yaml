@@ -8,6 +8,11 @@ image:
 # must have key with configuration.yaml
 backup:
   enabled: false
+  mqttHost: ""
+  image:
+    repository: ghcr.io/stkr22/zigbee2mqtt_backup_retriever
+    pullPolicy: IfNotPresent
+    tag: "latest-arm64"
   minio:
     hostname: ""
     secretName: ""
