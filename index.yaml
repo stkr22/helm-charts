@@ -249,6 +249,16 @@ entries:
   zigbee2mqtt:
   - apiVersion: v2
     appVersion: 1.26.0
+    created: "2022-07-27T20:36:58.116590648Z"
+    description: A Helm chart for Kubernetes
+    digest: 9571ff129a546b6d85fafeac88f5e00394cecf56b3881280e31fb507d42b130e
+    name: zigbee2mqtt
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-1.26.1/zigbee2mqtt-1.26.1.tgz
+    version: 1.26.1
+  - apiVersion: v2
+    appVersion: 1.26.0
     created: "2022-07-24T15:32:06.366881892Z"
     description: A Helm chart for Kubernetes
     digest: 99f06106c44e0cee38b308e41e8324e066c49f6005b4816245cf1c43445c79b5
@@ -327,4 +337,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-27T19:15:56.529179986Z"
+generated: "2022-07-27T20:36:58.116827352Z"
