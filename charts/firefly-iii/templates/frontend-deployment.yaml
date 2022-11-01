@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fireflyiii.fullname" . }}-frontend
+  labels:
+    {{- include "fireflyiii.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "fireflyiii.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fireflyiii.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "fireflyiii.fullname" . }}-frontend
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: APP_KEY
+              {{- if .Values.frontend.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.frontend.existingSecret }}
+                  key: appKey
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}-frontend
+                  key: appKey
+              {{- end }}
+            - name: STATIC_CRON_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}-frontend
+                  key: cronToken
+            - name: DEFAULT_LANGUAGE
+              value: en_US
+            - name: DEFAULT_LOCALE
+              value: de_DE
+            - name: TZ
+              value: Europe/Berlin
+            - name: TRUSTED_PROXIES
+              value: "**"
+            - name: DB_CONNECTION
+              value: psql
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: firefly
+            - name: DB_HOST
+              value: {{ include "fireflyiii.fullname" . }}-db
+            - name: DB_PASSWORD
+              {{- if .Values.postgres.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.existingSecret }}
+                  key: postgresql-password
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}-db
+                  key: postgresql-password
+              {{- end }}
+            - name: DB_USERNAME
+              {{- if .Values.postgres.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.existingSecret }}
+                  key: postgresql-username
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}-db
+                  key: postgresql-username
+              {{- end }}
+            {{- with .Values.frontend.env }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+        {{- if .Values.frontend.persistence.enabled }}
+        volumeMounts:
+          - name: upload
+            mountPath: "/var/www/html/storage/upload"
+        {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 1
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 1
+            periodSeconds: 30
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: upload
+          persistentVolumeClaim:
+            claimName: {{ default (include "fireflyiii.fullname" .)  .Values.persistence.existingClaim }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
