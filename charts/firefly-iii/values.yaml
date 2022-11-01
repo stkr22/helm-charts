@@ -5,6 +5,7 @@ importer:
     tag: ""
   accessToken: ""
   frontendUrl: ""
+  vanity_url: ""
   env: []
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
