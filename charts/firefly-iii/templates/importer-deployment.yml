@@ -48,8 +48,10 @@ spec:
               {{- end }}
             - name: FIREFLY_III_URL
               value: {{ .Values.importer.frontendUrl }}
+            {{- if .Values.importer.vanity_url }}
             - name: VANITY_URL
-              value: {{ .Values.importer.hosts[0].host }}
+              value: {{ .Values.importer.vanity_url }}
+            {{- end }}
             - name: TRUSTED_PROXIES
               value: "**"
             - name: TZ
