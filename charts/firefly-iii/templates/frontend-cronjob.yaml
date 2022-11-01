@@ -1,0 +1,71 @@
+{{- if .Values.frontend.cronjob.enabled }}
+{{- if or (.Values.frontend.cronjob.auth.token) (.Values.frontend.cronjob.auth.existingSecret) }}
+{{- if .Capabilities.APIVersions.Has "batch/v1" }}
+apiVersion: batch/v1
+{{- else -}}
+apiVersion: batch/v1beta1
+{{- end }}
+kind: CronJob
+metadata:
+  name: {{ include "fireflyiii.fullname" . }}
+  labels:
+    {{- include "fireflyiii.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.frontend.cronjob.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.frontend.cronjob.podAnnotations }}
+          annotations: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels: {{- include "fireflyiii.selectorLabels" . | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+          {{- with .Values.frontend.cronjob.imagePullSecrets }}
+          imagePullSecrets: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.cronjob.podSecurityContext }}
+          securityContext: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+            - name: frontend-cronjob
+              {{- with .Values.frontend.cronjob.securityContext }}
+              securityContext: {{- toYaml . | nindent 16 }}
+              {{- end }}
+              image: "{{ .Values.frontend.cronjob.image.repository }}:{{ .Values.frontend.cronjob.image.tag }}"
+              imagePullPolicy: {{ .Values.frontend.cronjob.image.pullPolicy }}
+              env:
+                - name: FIREFLY_III_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "fireflyiii.fullname" . }}-frontend
+                      key: cron-token
+              command:
+                - /usr/bin/curl
+              args:
+                - --silent
+                - --show-error
+                - --fail
+                - "http://{{ include "fireflyiii.fullname" . }}/api/v1/cron/$(FIREFLY_III_TOKEN)"
+              {{- with .Values.frontend.cronjob.resources }}
+              resources: {{- toYaml . | nindent 16 }}
+              {{- end }}
+          {{- with .Values.frontend.cronjob.nodeSelector }}
+          nodeSelector: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.cronjob.affinity }}
+          affinity: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.frontend.cronjob.tolerations }}
+          tolerations: {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
+{{- end }}

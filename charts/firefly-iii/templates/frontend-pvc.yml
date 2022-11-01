@@ -1,0 +1,14 @@
+{{- if and .Values.frontend.persistence.enabled (eq .Values.frontend.persistence.existingClaim "") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "fireflyiii.fullname" . }}
+  labels:
+    {{- include "fireflyiii.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.frontend.persistence.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.frontend.persistence.storage }}
+{{- end }}

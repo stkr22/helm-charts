@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "fireflyiii.fullname" . }}-db
+  labels:
+    {{- include "fireflyiii.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "fireflyiii.fullname" . }}-db
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ template "fireflyiii.fullname" . }}-postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+          ports:
+            - name: pgdb
+              containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRES_PASSWORD
+              {{- if .Values.postgres.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.existingSecret }}
+                  key: postgresql-password
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}
+                  key: postgresql-password
+              {{- end }}
+            - name: POSTGRES_USER
+              {{- if .Values.postgres.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.existingSecret }}
+                  key: postgresql-username
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}
+                  key: postgresql-username
+              {{- end }}
+            - name: POSTGRES_DB
+              value: backend
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            {{- with .Values.postgres.env }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- if .Values.postgres.persistence.enabled }}
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+                - pg_isready
+            initialDelaySeconds: 30
+            failureThreshold: 3
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+                - pg_isready
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 5432
+            failureThreshold: 30
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.postgres.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- if and (.Values.postgres.persistence.enabled) (not .Values.postgres.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes:
+          - {{ .Values.postgres.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.postgres.persistence.size }}
+{{- else }}
+      volumes:
+        - name: postgres-data
+      {{- if .Values.postgres.persistence.existingClaim }}
+            persistentVolumeClaim:
+              claimName: {{ .Values.postgres.persistence.existingClaim }}
+      {{- else }}
+            emptyDir: {}
+      {{- end }}
+{{- end }}

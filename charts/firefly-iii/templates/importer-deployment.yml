@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fireflyiii.fullname" . }}
+  labels:
+    {{- include "fireflyiii.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "fireflyiii.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.importer.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.importer.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.importer.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: fireflyiii-importer
+          {{- with .Values.importer.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.importer.image.repository }}:{{ .Values.importer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.importer.image.pullPolicy }}
+          env:
+            - name: FIREFLY_III_ACCESS_TOKEN
+              {{- if .Values.importer.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.importer.existingSecret }}
+                  key: appKey
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "fireflyiii.fullname" . }}-importer
+                  key: appKey
+              {{- end }}
+            - name: FIREFLY_III_URL
+              value: {{ .Values.importer.frontendUrl }}
+            - name: VANITY_URL
+              value: {{ .Values.importer.hosts[0].host }}
+            - name: TRUSTED_PROXIES
+              value: "**"
+            - name: TZ
+              value: Europe/Berlin
+            {{- with .Values.importer.env }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 1
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 1
+            periodSeconds: 30
+          {{- with .Values.importer.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.importer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.importer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.importer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
