@@ -9,7 +9,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+      {{- include "fireflyiii.db.selectorLabels" . | nindent 8 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -17,14 +17,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+        {{- include "fireflyiii.db.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ template "fireflyiii.fullname" . }}-postgres
+        - name: {{ template "fireflyiii.fullname" . }}-db
           image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
           imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
           ports:
@@ -57,7 +57,7 @@ spec:
                   key: postgresql-username
               {{- end }}
             - name: POSTGRES_DB
-              value: backend
+              value: firefly
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
             {{- with .Values.postgres.env }}
@@ -88,7 +88,7 @@ spec:
             periodSeconds: 10
           startupProbe:
             tcpSocket:
-              port: 5432
+              port: pgdb
             failureThreshold: 30
             periodSeconds: 5
           resources:

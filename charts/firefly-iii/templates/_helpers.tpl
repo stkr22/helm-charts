@@ -54,10 +54,26 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Selector labels frontend
 */}}
-{{- define "fireflyiii.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "fireflyiii.name" . }}
+{{- define "fireflyiii.frontend.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "fireflyiii.name" . }}-frontend
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels importer
+*/}}
+{{- define "fireflyiii.importer.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "fireflyiii.name" . }}-importer
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels postgres
+*/}}
+{{- define "fireflyiii.db.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "fullstack.name" . }}-db
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

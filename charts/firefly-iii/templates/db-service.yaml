@@ -11,4 +11,4 @@ spec:
       port: 5432
       targetPort: pgdb
   selector:
-    {{- include "fireflyiii.selectorLabels" . | nindent 4 }}
+    {{- include "fireflyiii.db.selectorLabels" . | nindent 4 }}

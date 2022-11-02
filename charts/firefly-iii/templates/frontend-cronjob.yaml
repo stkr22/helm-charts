@@ -1,31 +1,15 @@
 {{- if .Values.frontend.cronjob.enabled }}
-{{- if .Capabilities.APIVersions.Has "batch/v1" }}
 apiVersion: batch/v1
-{{- else -}}
-apiVersion: batch/v1beta1
-{{- end }}
 kind: CronJob
 metadata:
-  name: {{ include "fireflyiii.fullname" . }}
+  name: {{ include "fireflyiii.fullname" . }}-frontend-cron
   labels:
     {{- include "fireflyiii.labels" . | nindent 4 }}
-    {{- with .Values.labels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-  annotations:
-    {{- with .Values.frontend.cronjob.annotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
 spec:
   schedule: "0 3 * * *"
   jobTemplate:
     spec:
       template:
-        metadata:
-          {{- with .Values.frontend.cronjob.podAnnotations }}
-          annotations: {{- toYaml . | nindent 12 }}
-          {{- end }}
-          labels: {{- include "fireflyiii.selectorLabels" . | nindent 12 }}
         spec:
           restartPolicy: OnFailure
           {{- with .Values.frontend.cronjob.imagePullSecrets }}
