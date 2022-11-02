@@ -41,17 +41,6 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
   {{- end -}}
 {{- end -}}
 
-{{/*
-Common labels
-*/}}
-{{- define "fireflyiii.labels" -}}
-helm.sh/chart: {{ include "fireflyiii.chart" . }}
-{{ include "fireflyiii.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
 
 {{/*
 Selector labels frontend
@@ -62,6 +51,20 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "fireflyiii.frontend.labels" -}}
+helm.sh/chart: {{ include "fireflyiii.chart" . }}
+{{ include "fireflyiii.frontend.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+
+
+{{/*
 Selector labels importer
 */}}
 {{- define "fireflyiii.importer.selectorLabels" -}}
@@ -70,11 +73,35 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "fireflyiii.importer.labels" -}}
+helm.sh/chart: {{ include "fireflyiii.chart" . }}
+{{ include "fireflyiii.importer.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels postgres
 */}}
 {{- define "fireflyiii.db.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "fullstack.name" . }}-db
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "fireflyiii.db.labels" -}}
+helm.sh/chart: {{ include "fireflyiii.chart" . }}
+{{ include "fireflyiii.db.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*

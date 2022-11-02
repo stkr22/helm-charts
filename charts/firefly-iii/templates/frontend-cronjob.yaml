@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: {{ include "fireflyiii.fullname" . }}-frontend-cron
   labels:
-    {{- include "fireflyiii.labels" . | nindent 4 }}
+    {{- include "fireflyiii.frontend.labels" . | nindent 4 }}
 spec:
   schedule: "0 3 * * *"
   jobTemplate:

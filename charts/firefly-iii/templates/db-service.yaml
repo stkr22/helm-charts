@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "fireflyiii.fullname" . }}-db
   labels:
-    {{- include "fireflyiii.labels" . | nindent 4 }}
+    {{- include "fireflyiii.db.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
