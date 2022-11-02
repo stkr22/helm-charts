@@ -127,7 +127,9 @@ new password and use it.
 {{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" . | cat "-importer") ) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "accessToken" -}}
-  {{- else -}}
+  {{- else if .Values.importer.accessToken -}}
     {{- .Values.importer.accessToken -}}
+  {{- else -}}
+    {{- (randAlphaNum 32) | b64enc | quote -}}
   {{- end -}}
 {{- end -}}
