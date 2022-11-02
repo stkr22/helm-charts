@@ -66,7 +66,7 @@ Looks if there's an existing secret and reuse its password. If not it generates
 new password and use it.
 */}}
 {{- define "fireflyiii.frontend.appKey" -}}
-{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" .)-frontend ) -}}
+{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" . | cat "-frontend") ) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "appKey" -}}
   {{- else -}}
@@ -79,7 +79,7 @@ Looks if there's an existing secret and reuse its password. If not it generates
 new password and use it.
 */}}
 {{- define "fireflyiii.frontend.cronToken" -}}
-{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" .)-frontend ) -}}
+{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" . | cat "-frontend")) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "cronToken" -}}
   {{- else -}}
@@ -92,7 +92,7 @@ Looks if there's an existing secret and reuse its password. If not it generates
 new password and use it.
 */}}
 {{- define "fireflyiii.postgres.password" -}}
-{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" .) ) -}}
+{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" . | cat "-db") ) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "postgresql-password" -}}
   {{- else -}}
@@ -105,4 +105,18 @@ Defines default user.
 */}}
 {{- define "fireflyiii.postgres.user" -}}
 {{- "firefly" | b64enc | quote -}}
+{{- end -}}
+
+
+{{/*
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "fireflyiii.importer.accessToken" -}}
+{{- $secret := (lookup "v1" "Secret" (include "fireflyiii.namespace" .) (include "fireflyiii.fullname" . | cat "-importer") ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "accessToken" -}}
+  {{- else -}}
+    {{- .Values.importer.accessToken -}}
+  {{- end -}}
 {{- end -}}
