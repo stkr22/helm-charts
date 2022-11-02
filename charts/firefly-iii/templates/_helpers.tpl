@@ -88,7 +88,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels postgres
 */}}
 {{- define "fireflyiii.db.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "fullstack.name" . }}-db
+app.kubernetes.io/name: {{ include "fireflyiii.name" . }}-db
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
