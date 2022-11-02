@@ -66,6 +66,7 @@ frontend:
     tag: "latest"
     pullPolicy: IfNotPresent
   env: []
+  existingSecret: ""
   persistence:
     enabled: true
     existingClaim: ""

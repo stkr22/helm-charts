@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "fireflyiii.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
   strategy:
     type: Recreate
   selector:
@@ -38,6 +37,14 @@ spec:
               containerPort: 8080
               protocol: TCP
           env:
+            - name: DEFAULT_LANGUAGE
+              value: en_US
+            - name: DEFAULT_LOCALE
+              value: de_DE
+            - name: TZ
+              value: Europe/Berlin
+            - name: TRUSTED_PROXIES
+              value: "**"
             - name: APP_KEY
               {{- if .Values.frontend.existingSecret }}
               valueFrom:
@@ -55,14 +62,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "fireflyiii.fullname" . }}-frontend
                   key: cronToken
-            - name: DEFAULT_LANGUAGE
-              value: en_US
-            - name: DEFAULT_LOCALE
-              value: de_DE
-            - name: TZ
-              value: Europe/Berlin
-            - name: TRUSTED_PROXIES
-              value: "**"
             - name: DB_CONNECTION
               value: psql
             - name: DB_PORT
@@ -98,11 +97,11 @@ spec:
             {{- with .Values.frontend.env }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-        {{- if .Values.frontend.persistence.enabled }}
-        volumeMounts:
-          - name: upload
-            mountPath: "/var/www/html/storage/upload"
-        {{- end }}
+          {{- if .Values.frontend.persistence.enabled }}
+          volumeMounts:
+            - name: upload
+              mountPath: "/var/www/html/storage/upload"
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /health
