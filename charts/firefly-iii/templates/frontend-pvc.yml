@@ -6,8 +6,7 @@ metadata:
   labels:
     {{- include "fireflyiii.labels" . | nindent 4 }}
 spec:
-  accessModes:
-    - {{ .Values.frontend.persistence.accessModes }}
+  accessModes: {{ .Values.frontend.persistence.accessMode }}
   resources:
     requests:
       storage: {{ .Values.frontend.persistence.storage }}
