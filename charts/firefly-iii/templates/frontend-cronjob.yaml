@@ -1,5 +1,4 @@
 {{- if .Values.frontend.cronjob.enabled }}
-{{- if or (.Values.frontend.cronjob.auth.token) (.Values.frontend.cronjob.auth.existingSecret) }}
 {{- if .Capabilities.APIVersions.Has "batch/v1" }}
 apiVersion: batch/v1
 {{- else -}}
@@ -67,5 +66,4 @@ spec:
           {{- with .Values.frontend.cronjob.tolerations }}
           tolerations: {{- toYaml . | nindent 12 }}
           {{- end }}
-{{- end }}
 {{- end }}
