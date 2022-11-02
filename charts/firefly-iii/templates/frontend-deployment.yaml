@@ -127,11 +127,11 @@ spec:
             periodSeconds: 10
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
-      {{- if .Values.persistence.enabled }}
+      {{- if .Values.frontend.persistence.enabled }}
       volumes:
         - name: upload
           persistentVolumeClaim:
-            claimName: {{ default (include "fireflyiii.fullname" .)  .Values.persistence.existingClaim }}
+            claimName: {{ default (include "fireflyiii.fullname" .)  .Values.frontend.persistence.existingClaim }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
