@@ -41,7 +41,7 @@ spec:
               {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fireflyiii.fullname" . }}
+                  name: {{ template "fireflyiii.fullname" . }}-db
                   key: postgresql-password
               {{- end }}
             - name: POSTGRES_USER
@@ -53,7 +53,7 @@ spec:
               {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fireflyiii.fullname" . }}
+                  name: {{ template "fireflyiii.fullname" . }}-db
                   key: postgresql-username
               {{- end }}
             - name: POSTGRES_DB
