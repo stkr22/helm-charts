@@ -1,6 +1,6 @@
 importer:
   image:
-    repository: "fireflyiii/data-importer"
+    repository: fireflyiii/data-importer
     pullPolicy: IfNotPresent
     tag: ""
   accessToken: ""
@@ -62,8 +62,8 @@ postgres:
 
 frontend:
   image:
-    repository: "fireflyiii/core"
-    tag: "latest"
+    repository: fireflyiii/core
+    tag: ""
     pullPolicy: IfNotPresent
   env: []
   existingSecret: ""
