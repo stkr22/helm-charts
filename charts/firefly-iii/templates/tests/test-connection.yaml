@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ include "fireflyiii.fullname" . }}-test-connection"
   labels:
-    {{- include "fireflyiii.labels" . | nindent 4 }}
+    {{- include "fireflyiii.frontend.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "fireflyiii.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "fireflyiii.fullname" . }}-frontend:{{ .Values.service.port }}']
   restartPolicy: Never

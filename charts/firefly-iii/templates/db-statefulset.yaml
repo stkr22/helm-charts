@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ template "fireflyiii.fullname" . }}-db
   labels:
-    {{- include "fireflyiii.labels" . | nindent 4 }}
+    {{- include "fireflyiii.db.labels" . | nindent 4 }}
 spec:
   serviceName: {{ template "fireflyiii.fullname" . }}-db
   replicas: 1

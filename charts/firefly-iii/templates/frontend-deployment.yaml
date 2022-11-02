@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "fireflyiii.fullname" . }}-frontend
   labels:
-    {{- include "fireflyiii.labels" . | nindent 4 }}
+    {{- include "fireflyiii.frontend.labels" . | nindent 4 }}
 spec:
   strategy:
     type: Recreate
