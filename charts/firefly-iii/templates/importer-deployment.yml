@@ -7,7 +7,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "fireflyiii.selectorLabels" . | nindent 6 }}
+      {{- include "fireflyiii.importer.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.importer.podAnnotations }}
@@ -15,7 +15,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "fireflyiii.selectorLabels" . | nindent 8 }}
+        {{- include "fireflyiii.importer.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.importer.imagePullSecrets }}
       imagePullSecrets:
