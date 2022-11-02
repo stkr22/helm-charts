@@ -39,12 +39,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.importer.existingSecret }}
-                  key: appKey
+                  key: accessToken
               {{- else }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "fireflyiii.fullname" . }}-importer
-                  key: appKey
+                  key: accessToken
               {{- end }}
             - name: FIREFLY_III_URL
               value: {{ .Values.importer.frontendUrl }}

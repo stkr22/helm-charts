@@ -81,7 +81,7 @@ new password and use it.
   {{- if $secret -}}
     {{-  index $secret "data" "appKey" -}}
   {{- else -}}
-    {{- (randAlphaNum 32) | quote -}}
+    {{- (randAlphaNum 32) | b64enc | quote -}}
   {{- end -}}
 {{- end -}}
 
@@ -94,7 +94,7 @@ new password and use it.
   {{- if $secret -}}
     {{-  index $secret "data" "cronToken" -}}
   {{- else -}}
-    {{- (randAlphaNum 32) | quote -}}
+    {{- (randAlphaNum 32) | b64enc | quote -}}
   {{- end -}}
 {{- end -}}
 

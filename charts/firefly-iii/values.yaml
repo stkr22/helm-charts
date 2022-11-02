@@ -68,7 +68,7 @@ frontend:
   env: []
   existingSecret: ""
   persistence:
-    enabled: true
+    enabled: false
     existingClaim: ""
     size: 2Gi
     accessMode: ReadWriteOnce
