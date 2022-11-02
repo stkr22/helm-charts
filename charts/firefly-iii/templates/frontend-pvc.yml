@@ -10,5 +10,5 @@ spec:
     - {{ .Values.frontend.persistence.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.frontend.persistence.storage }}
+      storage: {{ .Values.frontend.persistence.size }}
 {{- end }}
