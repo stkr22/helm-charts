@@ -11,6 +11,17 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/airsonic-advanced-0.1.0/airsonic-advanced-0.1.0.tgz
     version: 0.1.0
+  fireflyiii:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2022-11-03T05:41:12.272420707Z"
+    description: A Helm chart for Kubernetes
+    digest: f58e5cf16cbf89f56f7b3cb2b4c87b648a72c4e1f80983bf0dd6beb554f34b05
+    name: fireflyiii
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/fireflyiii-0.1.0/fireflyiii-0.1.0.tgz
+    version: 0.1.0
   fullstack:
   - apiVersion: v2
     appVersion: latest
@@ -337,4 +348,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-27T20:36:58.116827352Z"
+generated: "2022-11-03T05:41:12.272490507Z"
