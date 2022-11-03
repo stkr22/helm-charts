@@ -47,7 +47,7 @@ spec:
                   key: accessToken
               {{- end }}
             - name: FIREFLY_III_URL
-              value: {{ .Values.importer.frontendUrl }}
+              value: http://{{ template "fireflyiii.fullname" . }}-frontend
             {{- if .Values.importer.vanity_url }}
             - name: VANITY_URL
               value: {{ .Values.importer.vanity_url }}
