@@ -14,6 +14,16 @@ entries:
   fireflyiii:
   - apiVersion: v2
     appVersion: latest
+    created: "2022-11-03T22:06:16.524623287Z"
+    description: A Helm chart for Kubernetes
+    digest: a037b8ff10a4e70b81e28925ef5cb5c949d019319ad942d4f6e20fd30bb5c1ea
+    name: fireflyiii
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/fireflyiii-0.2.2/fireflyiii-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: latest
     created: "2022-11-03T21:40:45.342830119Z"
     description: A Helm chart for Kubernetes
     digest: ee5fdb8a1effdb245218575e61e004a144762c21baa26fc82ba8a952e4b1985c
@@ -368,4 +378,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-03T21:40:45.34291052Z"
+generated: "2022-11-03T22:06:16.524698989Z"
