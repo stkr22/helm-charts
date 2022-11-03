@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "fireflyiii.fullname" . }}-frontend:{{ .Values.service.port }}']
+      args: ['{{ include "fireflyiii.fullname" . }}-frontend:80']
   restartPolicy: Never
