@@ -4,7 +4,6 @@ importer:
     pullPolicy: IfNotPresent
     tag: ""
   accessToken: ""
-  frontendUrl: ""
   vanity_url: ""
   env: []
   resources: {}
