@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fireflyiii.fullname" . }}
+  name: {{ include "fireflyiii.fullname" . }}-importer
   labels:
     {{- include "fireflyiii.importer.labels" . | nindent 4 }}
 spec:
