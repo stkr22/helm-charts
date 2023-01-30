@@ -14,5 +14,5 @@ spec:
         - /bin/sh
         - '-c'
       args:
-        - "mosquitto_sub -h {{ include "mosquitto.fullname" . }} -p {{ .Values.service.port }} -t 'topic' -C 1 -E -i probe -W 3"
+        - "mosquitto_sub -h {{ include "mosquitto.fullname" . }} -p {{ .Values.service.ports.mqtt.port }} -t 'topic' -C 1 -E -i probe -W 3"
   restartPolicy: Never
