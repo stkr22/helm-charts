@@ -5,33 +5,24 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-env: []
-
-persistence:
-  enabled: true
-  size: 2Gi
-  mountPath: /mosquitto/data
+env:
+  - name: TZ
+    value: Europe/Berlin
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
+container:
+  ports:
+    mqtt:
+      name: mqtt
+      port: 1883
 service:
   type: ClusterIP
-  port: 1883
+  ports:
+    mqtt:
+      name: mqtt
+      port: 1883
 
 ingress:
   enabled: false
@@ -48,6 +39,38 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+config: |
+  persistence true
+  persistence_location /mosquitto/data/
+  log_dest stdout
+  listener 1883
+  protocol mqtt
+  allow_anonymous true
+  use_subject_as_username true
+
+persistence:
+  enabled: true
+  size: 4Gi
+  mountPath: /mosquitto/data
+  storageClass: ""
+  accessMode: ReadWriteOnce
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  enabled: false
+  runAsUser: 999
+  fsGroup: 999
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
 resources:
   # limits:

@@ -20,79 +20,66 @@ spec:
       labels:
         {{- include "mosquitto.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+    {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+    {{- end }}
+    {{- if .Values.securityContext.enabled }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+    {{- end }}
       containers:
         - name: mosquitto-app
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: mqtt
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.container.ports.mqtt.port }}
               protocol: TCP
           env:
             {{- toYaml .Values.env | nindent 12 }}
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.container.ports.mqtt.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.container.ports.mqtt.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
           volumeMounts:
-            {{- if .Values.persistence.enabled }}
-            - name: data
-              mountPath: {{ .Values.persistence.mountPath }}
-            {{- end }}
-            - name: mosquitto-config
+            - name: mosquitto-conf
               mountPath: /mosquitto/config/mosquitto.conf
               subPath: mosquitto.conf
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - '-c'
-                - "mosquitto_sub -p {{ .Values.service.port }} -t 'topic' -C 1 -E -i probe -W 3"
-            initialDelaySeconds: 0
-            failureThreshold: 3
-            timeoutSeconds: 1
-            periodSeconds: 60
-          readinessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - '-c'
-                - "mosquitto_sub -p {{ .Values.service.port }} -t 'topic' -C 1 -E -i probe -W 3"
-            initialDelaySeconds: 0
-            failureThreshold: 3
-            timeoutSeconds: 1
-            periodSeconds: 60
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.service.port }}
-            initialDelaySeconds: 0
-            failureThreshold: 30
-            timeoutSeconds: 1
-            periodSeconds: 5
+              readOnly: true
+            - name: mosquitto-data
+              mountPath: /mosquitto/data
+              subPath: mosquitto/data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        {{- if .Values.persistence.enabled }}
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ include "mosquitto.fullname" . }}
-        {{- end }}
-        - name: mosquitto-config
-          configMap:
-            name: {{ include "mosquitto.fullname" . }}
-      {{- with .Values.nodeSelector }}
+      - name: mosquitto-conf
+        configMap:
+          name: {{ include "mosquitto.fullname" . }}-config
+      - name: mosquitto-data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ include "mosquitto.fullname" . }}-pvc
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+    {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
+    {{- end }}
+    {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+    {{- end }}
+    {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+    {{- end }}
