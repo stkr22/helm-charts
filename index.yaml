@@ -259,6 +259,16 @@ entries:
   pigallery2:
   - apiVersion: v2
     appVersion: 1.9.5-alpine
+    created: "2023-04-03T13:37:10.54347789Z"
+    description: A Helm chart for Kubernetes
+    digest: 1dbf7c6035a007163c35c429e71763c0305baf1b636216e126dcfa00033fa747
+    name: pigallery2
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/pigallery2-0.2.5/pigallery2-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    appVersion: 1.9.5-alpine
     created: "2023-04-03T13:18:56.312757538Z"
     description: A Helm chart for Kubernetes
     digest: 18024b085c6c2679f133202232a217f1adbf96abb6c2d081f7ea6259c043c33c
@@ -408,4 +418,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-03T13:18:56.312853439Z"
+generated: "2023-04-03T13:37:10.543984696Z"
