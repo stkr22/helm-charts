@@ -39,7 +39,7 @@ spec:
                   {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
                   {{- else }}
-                  name: {{ template "fullstack.fullname" . }}
+                  name: {{ template "pigallery2.fullname" . }}
                   {{- end }}
                   key: mysql-root-password
             - name: MYSQL_PASSWORD
@@ -48,7 +48,7 @@ spec:
                   {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
                   {{- else }}
-                  name: {{ template "fullstack.fullname" . }}
+                  name: {{ template "pigallery2.fullname" . }}
                   {{- end }}
                   key: mysql-password
             - name: MYSQL_USER
@@ -57,7 +57,7 @@ spec:
                   {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
                   {{- else }}
-                  name: {{ template "fullstack.fullname" . }}
+                  name: {{ template "pigallery2.fullname" . }}
                   {{- end }}
                   key: mysql-username
             - name: MYSQL_DATABASE
