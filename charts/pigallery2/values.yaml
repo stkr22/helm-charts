@@ -30,9 +30,6 @@ db:
     repository: mariadb
     tag: "10.7.3"
     pullPolicy: IfNotPresent
-  user: pigallery
-  password: savepassword
-  rootPassword: savepassword
   existingSecret: ""
   env: []
   resources: {}

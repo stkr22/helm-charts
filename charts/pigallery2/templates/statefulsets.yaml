@@ -34,32 +34,32 @@ spec:
               protocol: TCP
           env:
             - name: MYSQL_ROOT_PASSWORD
-              {{- if .Values.db.existingSecret }}
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
+                  {{- else }}
+                  name: {{ template "pigallery2.fullname" . }}
+                  {{- end }}
                   key: mysql-root-password
-              {{- else }}
-              value: {{ .Values.db.rootPassword }}
-              {{- end }}
             - name: MYSQL_PASSWORD
-              {{- if .Values.db.existingSecret }}
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
+                  {{- else }}
+                  name: {{ template "pigallery2.fullname" . }}
+                  {{- end }}
                   key: mysql-password
-              {{- else }}
-              value: {{ .Values.db.password }}
-              {{- end }}
             - name: MYSQL_USER
-              {{- if .Values.db.existingSecret }}
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
+                  {{- else }}
+                  name: {{ template "pigallery2.fullname" . }}
+                  {{- end }}
                   key: mysql-username
-              {{- else }}
-              value: {{ .Values.db.user }}
-              {{- end }}
             - name: MYSQL_DATABASE
               value: pigallery2
             {{- with .Values.db.env }}
