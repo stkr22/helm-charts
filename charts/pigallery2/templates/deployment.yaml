@@ -30,7 +30,7 @@ spec:
       {{- if .Values.pigallery2.media.enabled }}
       initContainers:
         - name: rclone-sync
-          image: rclone/rclone:1.58.1
+          image: rclone/rclone:1.62.2
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -65,24 +65,24 @@ spec:
               value: "{{ template "pigallery2.fullname" . }}-db"
             - name: MYSQL_DATABASE
               value: pigallery2
-            - name: MYSQL_USERNAME
-              {{- if .Values.db.existingSecret }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.db.existingSecret }}
-                  key: mysql-username
-              {{- else }}
-              value: {{ .Values.db.user }}
-              {{- end }}
             - name: MYSQL_PASSWORD
-              {{- if .Values.db.existingSecret }}
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.db.existingSecret }}
                   name: {{ .Values.db.existingSecret }}
+                  {{- else }}
+                  name: {{ template "pigallery2.fullname" . }}
+                  {{- end }}
                   key: mysql-password
-              {{- else }}
-              value: {{ .Values.db.password }}
-              {{- end }}
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.db.existingSecret }}
+                  name: {{ .Values.db.existingSecret }}
+                  {{- else }}
+                  name: {{ template "pigallery2.fullname" . }}
+                  {{- end }}
+                  key: mysql-username
             {{- with .Values.pigallery2.env }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
