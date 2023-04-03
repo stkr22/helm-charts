@@ -80,3 +80,32 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "pigallery2.db.password" -}}
+{{- $secret := (lookup "v1" "Secret" (include "pigallery2.namespace" .) (include "pigallery2.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "mysql-password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pigallery2.db.rootPassword" -}}
+{{- $secret := (lookup "v1" "Secret" (include "pigallery2.namespace" .) (include "pigallery2.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "mysql-root-password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Defines default user.
+*/}}
+{{- define "pigallery2.db.user" -}}
+{{- "pigallery" | b64enc | quote -}}
+{{- end -}}
