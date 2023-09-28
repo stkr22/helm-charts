@@ -18,3 +18,10 @@ To install the stkr22 chart:
 To uninstall the chart:
 
     helm delete my-<chart-name>
+
+
+## Debug:
+
+```bash
+minikube start
+```
