@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ template "fullname" . }}-work-pvc
+  name: {{ template "adguard-home.fullname" . }}-work-pvc
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
