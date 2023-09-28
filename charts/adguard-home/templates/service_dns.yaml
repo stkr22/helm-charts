@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-service-dns
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  type: NodePort
+  selector:
+    {{- include "adguard-home.selectorLabels" . | nindent 4 }}
+  externalTrafficPolicy: Local
+  ports:
+    - name: dns
+      protocol: UDP
+      port: 53
+      targetPort: 53
+      nodePort: {{ .Values.service_dns.nodePort }}
