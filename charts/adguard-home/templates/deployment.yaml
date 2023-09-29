@@ -86,13 +86,13 @@ spec:
       volumes:
         - name: adguard-work-data
           persistentVolumeClaim:
-            claimName: adguard-work-pvc
+            claimName: {{ template "adguard-home.fullname" . }}-work-pvc
         - name: adguard-conf-data
           persistentVolumeClaim:
-            claimName: adguard-conf-pvc
+            claimName: {{ template "adguard-home.fullname" . }}-conf-pvc
         - name: adguard-config
           configMap:
-            name: adguard-config
+            name: {{ template "adguard-home.fullname" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
