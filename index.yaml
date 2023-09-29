@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  adguard-home:
+  - apiVersion: v2
+    appVersion: v0.107.38
+    created: "2023-09-29T09:53:38.329251796Z"
+    description: A Helm chart for Kubernetes
+    digest: d3474b92020a0cc3e61e329e94fbc4fe2d010f964ab598d1c1f29390411afe16
+    name: adguard-home
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/adguard-home-1.0.0/adguard-home-1.0.0.tgz
+    version: 1.0.0
   airsonic-advanced:
   - apiVersion: v2
     appVersion: edge-11.0.0-SNAPSHOT.20220418221611
@@ -418,4 +429,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-03T13:37:10.543984696Z"
+generated: "2023-09-29T09:53:38.329411307Z"
