@@ -90,9 +90,6 @@ spec:
               mountPath: /opt/adguardhome/work
             - name: adguard-conf-data
               mountPath: /opt/adguardhome/conf
-            - name: adguard-config
-              mountPath: /tmp/AdGuardHome.yaml
-              subPath: AdGuardHome.yaml
       volumes:
         - name: adguard-work-data
           persistentVolumeClaim:
