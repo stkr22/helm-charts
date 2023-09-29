@@ -35,8 +35,25 @@ spec:
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
-  {{- with .Values.ingress.hosts }}
   rules:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    - host: {{ .Values.ingress.web_init_host }}
+      http:
+        paths:
+        - backend:
+            service:
+              name: {{ template "adguard-home.fullname" . }}-service-web
+              port:
+                name: http-initial
+          path: /
+          pathType: ImplementationSpecific
+    - host: {{ .Values.ingress.web_host }}
+      http:
+        paths:
+        - backend:
+            service:
+              name: {{ template "adguard-home.fullname" . }}-service-web
+              port:
+                name: http
+          path: /
+          pathType: ImplementationSpecific
 {{- end }}
