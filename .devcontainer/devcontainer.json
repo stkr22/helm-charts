@@ -17,8 +17,11 @@
 		}
 	},
 	"mounts": [
-		// "source=${localEnv:USERPROFILE}/Downloads/cloe_model,target=/home/vscode/cloe_test,type=bind,consistency=cached",
-		"source=vscode-helm-charts-yml,target=/vscode/.vscode-server/extensions,type=volume"
+		{
+			"source": "vscode-helm-charts-yml",
+			"target": "/vscode/.vscode-server/extension",
+			"type": "volume"
+		}
 	],
 	"customizations": {
 		"vscode": {
