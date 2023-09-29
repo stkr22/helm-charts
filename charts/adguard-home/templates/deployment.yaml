@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "adguard-home.fullname" . }}
+  labels:
+    {{- include "adguard-home.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    {{- toYaml .Values.deployment.strategy | nindent 6 }}
+  selector:
+    matchLabels:
+      {{- include "adguard-home.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "adguard-home.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "adguard-home.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ .Chart.Name }}-copy-configmap
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          command:
+            - "sh"
+            - "-c"
+            - |
+              if [ ! -f /opt/adguardhome/conf/AdGuardHome.yaml ]; then
+                mkdir -p /opt/adguardhome/conf
+                cp /tmp/AdGuardHome.yaml /opt/adguardhome/conf/AdGuardHome.yaml
+              fi
+          volumeMounts:
+            - name: adguard-config
+              mountPath: /tmp/AdGuardHome.yaml
+              subPath: AdGuardHome.yaml
+            - name: adguard-conf-data
+              mountPath: /opt/adguardhome/conf
+          securityContext:
+            runAsUser: 0
+      containers:
+        - name: {{ .Chart.Name }}-app
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 53
+              name: dns
+              protocol: UDP
+            - containerPort: 3000
+              name: http-initial
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+                - nslookup example.com
+            initialDelaySeconds: 30
+            failureThreshold: 3
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - '-c'
+                - nslookup example.com
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: adguard-work-data
+              mountPath: /opt/adguardhome/work
+            - name: adguard-conf-data
+              mountPath: /opt/adguardhome/conf
+      volumes:
+        - name: adguard-work-data
+          persistentVolumeClaim:
+            claimName: {{ template "adguard-home.fullname" . }}-work-pvc
+        - name: adguard-conf-data
+          persistentVolumeClaim:
+            claimName: {{ template "adguard-home.fullname" . }}-conf-pvc
+        - name: adguard-config
+          configMap:
+            name: {{ template "adguard-home.fullname" . }}-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

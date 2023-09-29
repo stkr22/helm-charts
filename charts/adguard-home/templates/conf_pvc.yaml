@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "adguard-home.fullname" . }}-conf-pvc
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  accessModes:
+    - {{ .Values.conf_pvc.accessModes }}
+  resources:
+    requests:
+      storage: {{ .Values.conf_pvc.storage }}
