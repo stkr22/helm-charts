@@ -5,4 +5,5 @@ metadata:
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 data:
-  AdGuardHome.yaml: {{ toYaml .Values.configmap_config }}
+  AdGuardHome.yaml: |
+    {{ .Values.configmap_config | nindent 4 }}
