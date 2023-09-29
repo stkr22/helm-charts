@@ -4,7 +4,7 @@
 service_dns:
   nodePort: 30553
 conf_pvc:
-  storage: 50m
+  storage: 50Mi
   accessModes: ReadWriteOnce
 work_pvc:
   storage: 1Gi
