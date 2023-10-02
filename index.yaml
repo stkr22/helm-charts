@@ -32,6 +32,17 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/airsonic-advanced-0.1.0/airsonic-advanced-0.1.0.tgz
     version: 0.1.0
+  calibre-web:
+  - apiVersion: v2
+    appVersion: 0.6.20
+    created: "2023-10-02T13:25:49.748721935Z"
+    description: A Helm chart for Kubernetes
+    digest: 859e013175efa1a1c3df24bd4c2338d04dea7a06f86b39e94e1c396a56bf6e91
+    name: calibre-web
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/calibre-web-0.1.0/calibre-web-0.1.0.tgz
+    version: 0.1.0
   fireflyiii:
   - apiVersion: v2
     appVersion: latest
@@ -439,4 +450,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-09-29T21:16:43.653300277Z"
+generated: "2023-10-02T13:25:49.751298444Z"
