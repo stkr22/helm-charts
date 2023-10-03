@@ -74,8 +74,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Looks if there's an existing secret and reuse its password. If not it generates
 new password and use it.
 */}}
-{{- define "fullstack.postgres.password" -}}
-{{- $secret := (lookup "v1" "Secret" (include "fullstack.namespace" .) (include "fullstack.fullname" .) ) -}}
+{{- define "homeassistant.postgres.password" -}}
+{{- $secret := (lookup "v1" "Secret" (include "homeassistant.namespace" .) (include "homeassistant.fullname" .) ) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "postgresql-password" -}}
   {{- else -}}
@@ -86,7 +86,7 @@ new password and use it.
 {{/*
 Defines default user.
 */}}
-{{- define "fullstack.postgres.user" -}}
+{{- define "homeassistant.postgres.user" -}}
 {{- "backend" | b64enc | quote -}}
 {{- end -}}
 
