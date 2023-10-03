@@ -24,6 +24,16 @@ entries:
   airsonic-advanced:
   - apiVersion: v2
     appVersion: edge-11.0.0-SNAPSHOT.20220418221611
+    created: "2023-10-03T13:23:02.39098311Z"
+    description: A Helm chart for Kubernetes
+    digest: d77b15faf80736b4dd8dde2ee92d943ddd37c5673701ee5f392b2e1abb1cf875
+    name: airsonic-advanced
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/airsonic-advanced-1.0.0/airsonic-advanced-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
+    appVersion: edge-11.0.0-SNAPSHOT.20220418221611
     created: "2022-05-26T22:33:28.403996738Z"
     description: A Helm chart for Kubernetes
     digest: 46c1141bd0c61387da6a949e48d31b0cc47e9b7fa4a5cdf99e65b1e8f6547de0
@@ -178,6 +188,16 @@ entries:
   homeassistant:
   - apiVersion: v2
     appVersion: 2022.5.5
+    created: "2023-10-03T13:23:02.680693544Z"
+    description: A Helm chart for Kubernetes
+    digest: ba0514b8f4f09024fe6651b1497b9b509ddb2e74eb8c35fdf8b1e3cbb97a8ab4
+    name: homeassistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/homeassistant-1.0.0/homeassistant-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
+    appVersion: 2022.5.5
     created: "2022-05-21T06:50:19.030889293Z"
     description: A Helm chart for Kubernetes
     digest: 48377c94d7f1426289b9716337d53d06fa0a2c2303fd51799b9433403660da05
@@ -270,6 +290,16 @@ entries:
   navidrome:
   - apiVersion: v2
     appVersion: 0.47.5
+    created: "2023-10-03T13:23:02.88528218Z"
+    description: A Helm chart for Kubernetes
+    digest: 03e91aa65924b7ca2fab80840f83375561e44f82053acd595b9088a296806599
+    name: navidrome
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/navidrome-1.0.0/navidrome-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
+    appVersion: 0.47.5
     created: "2022-06-20T16:44:46.982987674Z"
     description: A Helm chart for Kubernetes
     digest: aea582f992982c442aec5b453067847df7154ddcb271492a34cdaa322dc3f888
@@ -289,6 +319,16 @@ entries:
     - https://github.com/stkr22/helm-charts/releases/download/navidrome-0.1.0/navidrome-0.1.0.tgz
     version: 0.1.0
   pigallery2:
+  - apiVersion: v2
+    appVersion: 1.9.5-alpine
+    created: "2023-10-03T13:23:03.134332628Z"
+    description: A Helm chart for Kubernetes
+    digest: 4694bb1487219ea0720d26a0e987dd50452af6d165ee5dc744fca0fbc9368c7a
+    name: pigallery2
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/pigallery2-1.0.0/pigallery2-1.0.0.tgz
+    version: 1.0.0
   - apiVersion: v2
     appVersion: 1.9.5-alpine
     created: "2023-04-03T13:37:10.54347789Z"
@@ -450,4 +490,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-02T13:25:49.751298444Z"
+generated: "2023-10-03T13:23:03.13461313Z"
