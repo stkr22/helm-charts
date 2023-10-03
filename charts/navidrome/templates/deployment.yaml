@@ -27,25 +27,6 @@ spec:
       serviceAccountName: {{ include "navidrome.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.navidrome.media.enabled }}
-      initContainers:
-        - name: rclone-sync
-          image: rclone/rclone:1.58.1
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-          args:
-            - rclone sync --config /secret/{{ .Values.navidrome.media.rcloneSecretKey }}
-              --delete-after --progress --stats 10s
-              --check-first {{ .Values.navidrome.media.rcloneLocation }} /music
-          volumeMounts:
-          - name: music
-            mountPath: /music
-          - name: rclone-config
-            mountPath: /secret/
-            readOnly: true
-      {{- end }}
       containers:
         - name: navidrome
           securityContext:
@@ -111,11 +92,6 @@ spec:
           {{- else if not .Values.navidrome.persistence.enabled }}
           emptyDir: {}
           {{- end }}
-        {{- if .Values.navidrome.media.enabled }}
-        - name: rclone-config
-          secret:
-              secretName: {{ .Values.navidrome.media.rcloneSecretName }}
-        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

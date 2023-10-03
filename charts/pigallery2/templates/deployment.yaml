@@ -27,25 +27,6 @@ spec:
       serviceAccountName: {{ include "pigallery2.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.pigallery2.media.enabled }}
-      initContainers:
-        - name: rclone-sync
-          image: rclone/rclone:1.62.2
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-          args:
-            - rclone sync --config /secret/{{ .Values.pigallery2.media.rcloneSecretKey }}
-              --delete-after --progress --stats 10s
-              --check-first {{ .Values.pigallery2.media.rcloneLocation }} /media
-          volumeMounts:
-          - name: media
-            mountPath: /media
-          - name: rclone-config
-            mountPath: /secret/
-            readOnly: true
-      {{- end }}
       containers:
         - name: pigallery2
           securityContext:
@@ -123,11 +104,6 @@ spec:
           {{- else if not .Values.pigallery2.persistence.enabled }}
           emptyDir: {}
           {{- end }}
-        {{- if .Values.pigallery2.media.enabled }}
-        - name: rclone-config
-          secret:
-              secretName: {{ .Values.pigallery2.media.rcloneSecretName }}
-        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

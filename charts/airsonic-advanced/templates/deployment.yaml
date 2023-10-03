@@ -27,25 +27,6 @@ spec:
       serviceAccountName: {{ include "airsonicAdvanced.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.airsonicAdvanced.media.enabled }}
-      initContainers:
-        - name: rclone-sync
-          image: rclone/rclone:latest
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-          args:
-            - rclone sync --config /secret/{{ .Values.airsonicAdvanced.media.rcloneSecretKey }}
-              --delete-after --progress --stats 10s
-              --check-first {{ .Values.airsonicAdvanced.media.rcloneLocation }} /var/music
-          volumeMounts:
-          - name: music
-            mountPath: /var/music
-          - name: rclone-config
-            mountPath: /secret/
-            readOnly: true
-      {{- end }}
       containers:
         - name: airsonic-advanced
           securityContext:
@@ -110,11 +91,6 @@ spec:
           {{- else if not .Values.airsonicAdvanced.persistence.enabled }}
           emptyDir: {}
           {{- end }}
-        {{- if .Values.airsonicAdvanced.media.enabled }}
-        - name: rclone-config
-          secret:
-              secretName: {{ .Values.airsonicAdvanced.media.rcloneSecretName }}
-        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
