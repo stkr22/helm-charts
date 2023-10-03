@@ -24,6 +24,17 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "homeassistant.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "homeassistant.chart" -}}
@@ -69,6 +80,26 @@ Selector labels postgres
 app.kubernetes.io/name: {{ include "homeassistant.name" . }}-db
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "homeassistant.postgres.password" -}}
+{{- $secret := (lookup "v1" "Secret" (include "homeassistant.namespace" .) (include "homeassistant.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "postgresql-password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Defines default user.
+*/}}
+{{- define "homeassistant.postgres.user" -}}
+{{- "backend" | b64enc | quote -}}
+{{- end -}}
 
 {{/*
 Create the name of the service account to use

@@ -10,11 +10,6 @@ pigallery2:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  media:
-    enabled: false
-    rcloneSecretName: ""
-    rcloneSecretKey: ""
-    rcloneLocation: ""
   persistence:
     enabled: true
     configSize: 1Gi
