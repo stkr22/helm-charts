@@ -6,19 +6,4 @@ metadata:
     {{- include "homeassistant.labels" . | nindent 4 }}
 data:
   configuration.yaml: |-
-    default_config:
-
-    # Text to speech
-    tts:
-      - platform: google_translate
-    {{- if .Values.postgres.enabled }}
-    recorder:
-      purge_keep_days: 30
-      commit_interval: 3
-      db_url: postgresql://PGUSER:PGPASSWORD@{{ template "homeassistant.fullname" . }}-db/ha_recorder
-    {{- end }}
-    http:
-      use_x_forwarded_for: true
-      trusted_proxies:
-        - 10.0.0.0/8
-        - 192.168.0.0/16
+    {{- .Values.config | nindent 4 }}
