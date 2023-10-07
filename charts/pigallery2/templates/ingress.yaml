@@ -45,7 +45,6 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
     - host: {{ .Values.ingress.web_host }}
       http:
         paths:
