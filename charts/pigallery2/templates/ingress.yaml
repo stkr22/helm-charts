@@ -62,7 +62,7 @@ spec:
                   name: http
               {{- else }}
               serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
+              servicePort: 8080
               {{- end }}
           {{- end }}
     {{- end }}
