@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "pigallery2.fullname" . }}
+  name: {{ include "pigallery2.fullname" . }}-service-web
   labels:
     {{- include "pigallery2.labels" . | nindent 4 }}
 spec:
