@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "calibre-web.fullname" . }}-service-web:80']
+      args: ['{{ include "pigallery2.fullname" . }}-service-web:80']
   restartPolicy: Never
