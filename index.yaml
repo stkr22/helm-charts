@@ -45,6 +45,16 @@ entries:
   calibre-web:
   - apiVersion: v2
     appVersion: 0.6.20
+    created: "2023-10-07T13:54:44.793420238Z"
+    description: A Helm chart for Kubernetes
+    digest: 8f0c13382c9a87e43d388806de4116cff6d8f335684da6fc2dbccf32db8e7a10
+    name: calibre-web
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/calibre-web-0.1.1/calibre-web-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 0.6.20
     created: "2023-10-02T13:25:49.748721935Z"
     description: A Helm chart for Kubernetes
     digest: 859e013175efa1a1c3df24bd4c2338d04dea7a06f86b39e94e1c396a56bf6e91
@@ -321,6 +331,16 @@ entries:
   pigallery2:
   - apiVersion: v2
     appVersion: 1.9.5-alpine
+    created: "2023-10-07T13:54:44.912658911Z"
+    description: A Helm chart for Kubernetes
+    digest: 858fc4b5e90bb531d8c5ee496468f2b9e922ae087edf9afde089a11c5713a857
+    name: pigallery2
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/pigallery2-1.1.0/pigallery2-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.9.5-alpine
     created: "2023-10-03T13:23:03.134332628Z"
     description: A Helm chart for Kubernetes
     digest: 4694bb1487219ea0720d26a0e987dd50452af6d165ee5dc744fca0fbc9368c7a
@@ -490,4 +510,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-03T13:23:03.13461313Z"
+generated: "2023-10-07T13:54:44.913287095Z"
