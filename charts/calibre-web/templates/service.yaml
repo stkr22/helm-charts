@@ -9,7 +9,7 @@ spec:
   selector:
     {{- include "calibre-web.selectorLabels" . | nindent 4 }}
   ports:
-    - port: 8083
+    - port: 80
       targetPort: http
       protocol: TCP
       name: http

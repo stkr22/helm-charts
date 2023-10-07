@@ -28,7 +28,8 @@
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"ms-kubernetes-tools.vscode-kubernetes-tools",
-				"GitHub.vscode-pull-request-github"
+				"GitHub.vscode-pull-request-github",
+				"donjayamanne.githistory"
 			]
 		}
 	}
