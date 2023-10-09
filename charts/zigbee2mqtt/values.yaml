@@ -5,20 +5,6 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-# must have key with configuration.yaml
-backup:
-  enabled: false
-  mqttHost: ""
-  image:
-    repository: ghcr.io/stkr22/zigbee2mqtt_backup_retriever
-    pullPolicy: IfNotPresent
-    tag: "latest-arm64"
-  minio:
-    hostname: ""
-    secretName: ""
-    bucketName: ""
-  cron: "* * * * *"
-
 env:
   - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
     value: mqtt://mosquitto
