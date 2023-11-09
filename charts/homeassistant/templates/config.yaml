@@ -10,7 +10,7 @@ data:
       # Text to speech
       tts:
         - platform: google_translate
-      {{- if .Values.postgres.enabled }}
+      {{- if .Values.postgresql.enabled }}
       recorder:
         purge_keep_days: 30
         commit_interval: 3

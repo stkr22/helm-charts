@@ -13,11 +13,11 @@ image:
 postgresql:
   enabled: false
   global:
-  postgresql:
-    auth:
-      username: home-assistant
-      password: home-assistant-pass
-      database: home-assistant
+    postgresql:
+      auth:
+        username: home-assistant
+        password: home-assistant-pass
+        database: home-assistant
 
 env:
   - name: TZ

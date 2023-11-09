@@ -39,22 +39,22 @@ spec:
               fi;
           env:
             - name: POSTGRES_PASSWORD
-              {{- if .Values.postgres.existingSecret }}
+              {{- if .Values.postgresql.global.postgresql.auth.existingSecret }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.postgres.existingSecret }}
+                  name: {{ .Values.postgresqlql.global.postgresql.auth.existingSecret }}
                   key: postgresql-password
               {{- else }}
-              value: {{ .Values.postgres.password }}
+              value: {{ .Values.postgresql.global.postgresql.auth.password }}
               {{- end }}
             - name: POSTGRES_USER
-              {{- if .Values.postgres.existingSecret }}
+              {{- if .Values.postgresql.global.postgresql.auth.existingSecret }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.postgres.existingSecret }}
+                  name: {{ .Values.postgresql.global.postgresql.auth.existingSecret }}
                   key: postgresql-username
               {{- else }}
-              value: {{ .Values.postgres.user }}
+              value: {{ .Values.postgresql.global.postgresql.auth.user }}
               {{- end }}
           volumeMounts:
             - name: homeassistant-config
