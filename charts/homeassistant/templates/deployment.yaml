@@ -27,7 +27,8 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: homeassistant-config-init
+      {{- if .Values.postgresql.enabled }}
+        - name: {{ .Chart.Name }}-copy-configmap
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           command:
@@ -39,22 +40,22 @@ spec:
               fi;
           env:
             - name: POSTGRES_PASSWORD
-              {{- if .Values.postgres.existingSecret }}
+              {{- if .Values.postgresql.global.postgresql.auth.existingSecret }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.postgres.existingSecret }}
+                  name: {{ .Values.postgresqlql.global.postgresql.auth.existingSecret }}
                   key: postgresql-password
               {{- else }}
-              value: {{ .Values.postgres.password }}
+              value: {{ .Values.postgresql.global.postgresql.auth.password }}
               {{- end }}
             - name: POSTGRES_USER
-              {{- if .Values.postgres.existingSecret }}
+              {{- if .Values.postgresql.global.postgresql.auth.existingSecret }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.postgres.existingSecret }}
+                  name: {{ .Values.postgresql.global.postgresql.auth.existingSecret }}
                   key: postgresql-username
               {{- else }}
-              value: {{ .Values.postgres.user }}
+              value: {{ .Values.postgresql.global.postgresql.auth.user }}
               {{- end }}
           volumeMounts:
             - name: homeassistant-config
@@ -63,6 +64,25 @@ spec:
               readOnly: true
             - name: data
               mountPath: /config
+      {{- else }}
+        - name: {{ .Chart.Name }}-copy-configmap
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - if ! grep -q 'http:' '/config/configuration.yaml'; then
+                cp /config-init/configuration.yaml /config/configuration.yaml;
+              fi;
+          volumeMounts:
+            - name: homeassistant-config
+              mountPath: /config-init/configuration.yaml
+              subPath: configuration.yaml
+              readOnly: true
+            - name: data
+              mountPath: /config
+      {{- end }}
       containers:
         - name: homeassistant-app
           securityContext:
