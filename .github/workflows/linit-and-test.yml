@@ -40,6 +40,11 @@ jobs:
             echo "::set-output name=changed_charts::$charts"
           fi
 
+      - name: Adding bitnami dependencies
+        id: adding-bitnami-dependencies
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
 
