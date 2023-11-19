@@ -23,6 +23,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "seafile.fullname" . }}
+            name: {{ include "seafile.fullname" . }}-web
             port:
               name: http
