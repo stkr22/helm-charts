@@ -1,0 +1,14 @@
+apiVersion: v2
+name: seafile
+description: A Helm chart for Seafile Server
+type: application
+version: 1.0.0
+appVersion: 11.0.2
+dependencies:
+  - name: mariadb
+    version: 14.1.2
+    repository: https://charts.bitnami.com/bitnami
+  - name: memcached
+    version: 6.7.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: memcached.enabled

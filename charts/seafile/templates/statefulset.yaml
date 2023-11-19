@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "seafile.fullname" . }}
+  labels:
+    {{- include "seafile.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "seafile.fullname" . }}
+  replicas: {{ .Values.seafile.replicas }}
+  selector:
+    matchLabels:
+      {{- include "seafile.selectorLabels" . | nindent 6 }}
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "seafile.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "seafile.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: seafile
+        image: "{{ .Values.seafile.image.repository }}:{{ .Values.seafile.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.seafile.image.pullPolicy }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        env:
+          - name: DB_HOST
+            value: "{{ .Release.Name }}-mariadb.{{ .Release.Namespace }}"
+          - name: DB_ROOT_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Release.Name }}-mariadb"
+                key: mariadb-root-password
+          - name: SEAFILE_SERVER_LETSENCRYPT
+            value: "false"
+          - name: SEAFILE_SERVER_HOSTNAME
+            value: {{ .Values.ingress.host }}
+          - name: SEAFILE_ADMIN_EMAIL
+            valueFrom:
+              secretKeyRef:
+                {{- if .Values.seafile.existingSecret }}
+                name: {{ .Values.seafile.existingSecret }}
+                {{- else }}
+                name: {{ template "seafile.fullname" . }}
+                {{- end }}
+                key: admin-username
+          - name: SEAFILE_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                {{- if .Values.seafile.existingSecret }}
+                name: {{ .Values.seafile.existingSecret }}
+                {{- else }}
+                name: {{ template "seafile.fullname" . }}
+                {{- end }}
+                key: admin-password
+          {{- with .Values.seafile.env }}
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          failureThreshold: 3
+          timeoutSeconds: 3
+          periodSeconds: 20
+          initialDelaySeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          failureThreshold: 3
+          timeoutSeconds: 3
+          periodSeconds: 10
+          initialDelaySeconds: 60
+        startupProbe:
+          tcpSocket:
+            port: http
+          failureThreshold: 60
+          timeoutSeconds: 2
+          periodSeconds: 5
+          initialDelaySeconds: 10
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: seafile-data
+          mountPath: /shared
+        {{- with .Values.seafile.extraVolumeMounts }}
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.seafile.resources | nindent 12 }}
+      {{- if .Values.seafile.extraVolumes }}
+      volumes:
+      {{- with .Values.seafile.extraVolumes }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: seafile-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.seafile.persistence.size }}

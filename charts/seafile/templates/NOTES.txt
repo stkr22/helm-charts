@@ -1,0 +1,2 @@
+Find your Seafile Server here:
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.host }}
