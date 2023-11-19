@@ -454,6 +454,25 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/pigallery2-0.1.0/pigallery2-0.1.0.tgz
     version: 0.1.0
+  seafile:
+  - apiVersion: v2
+    appVersion: 11.0.2
+    created: "2023-11-19T22:33:49.643659497Z"
+    dependencies:
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.1.2
+    - condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.7.0
+    description: A Helm chart for Seafile Server
+    digest: 5ddd662e5537a6a070396f69f4cc19e4e716ffad18fad9f82cf790c1d7bac133
+    name: seafile
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/seafile-1.0.0/seafile-1.0.0.tgz
+    version: 1.0.0
   zigbee2mqtt:
   - apiVersion: v2
     appVersion: 1.33.1
@@ -555,4 +574,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-09T15:34:12.037554949Z"
+generated: "2023-11-19T22:33:49.643762589Z"
