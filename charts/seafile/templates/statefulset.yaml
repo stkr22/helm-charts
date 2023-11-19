@@ -71,6 +71,7 @@ spec:
           failureThreshold: 4
           timeoutSeconds: 3
           periodSeconds: 20
+          initialDelaySeconds: 120
         readinessProbe:
           httpGet:
             path: /
@@ -79,6 +80,7 @@ spec:
           failureThreshold: 4
           timeoutSeconds: 3
           periodSeconds: 10
+          initialDelaySeconds: 120
         startupProbe:
           tcpSocket:
             port: http
