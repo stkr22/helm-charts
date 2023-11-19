@@ -79,12 +79,14 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 securityContext:
-  capabilities:
-    drop:
-      - ALL
-    add:
-      - CHOWN
-      - NET_BIND_SERVICE
+  # capabilities:
+  #   drop:
+  #     - ALL
+  #   add:
+  #     - CHOWN
+  #     - NET_BIND_SERVICE
+  #     - DAC_OVERRIDE
+  #     - SETUID
   runAsUser: 0
   runAsGroup: 0
   runAsNonRoot: false
