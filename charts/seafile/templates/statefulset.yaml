@@ -32,7 +32,7 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
         env:
           - name: DB_HOST
-            value: "{{ .Release.Name }}-mariaseafile.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+            value: "{{ .Release.Name }}-mariaseafile.{{ .Release.Namespace }}"
           - name: DB_ROOT_PASSWD
             valueFrom:
               secretKeyRef:

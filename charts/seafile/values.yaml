@@ -1,9 +1,3 @@
-# Default values for seafile-server.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-clusterDomain: cluster.local
-
 # see Bitnami MariaDB Chart Values
 # https://artifacthub.io/packages/helm/bitnami/mariadb
 # mariadb:
@@ -88,6 +82,8 @@ securityContext:
   capabilities:
     drop:
       - ALL
+    add:
+      - CHOWN
   runAsUser: 0
   runAsGroup: 0
   runAsNonRoot: false
