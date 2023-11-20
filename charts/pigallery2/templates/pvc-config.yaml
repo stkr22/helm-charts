@@ -1,4 +1,4 @@
-{{- if .Values.pigallery2.persistence.enabled }}
+{{- if .Values.pigallery2.persistence.config.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,8 +7,8 @@ metadata:
     {{- include "pigallery2.labels" . | nindent 4 }}
 spec:
   accessModes:
-  - {{ .Values.pigallery2.persistence.configAccessMode }}
+  - {{ .Values.pigallery2.persistence.config.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.pigallery2.persistence.configSize }}
+      storage: {{ .Values.pigallery2.persistence.config.size }}
 {{- end }}

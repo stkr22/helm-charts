@@ -45,27 +45,20 @@ spec:
             - name: Server-port
               value: "8080"
             - name: MYSQL_HOST
-              value: "{{ template "pigallery2.fullname" . }}-db"
+              value: "{{ .Release.Name }}-mariadb.{{ .Release.Namespace }}"
             - name: MYSQL_DATABASE
-              value: pigallery2
+              value: {{ .Values.mariadb.auth.database }}
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.db.existingSecret }}
-                  name: {{ .Values.db.existingSecret }}
+                  {{- if .Values.mariadb.auth.existingSecret }}
+                  name: {{ .Values.mariadb.auth.existingSecret }}
                   {{- else }}
-                  name: {{ template "pigallery2.fullname" . }}
+                  name: "{{ .Release.Name }}-mariadb"
                   {{- end }}
-                  key: mysql-password
+                  key: mariadb-root-password
             - name: MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.db.existingSecret }}
-                  name: {{ .Values.db.existingSecret }}
-                  {{- else }}
-                  name: {{ template "pigallery2.fullname" . }}
-                  {{- end }}
-                  key: mysql-username
+              value: root
             {{- with .Values.pigallery2.env }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -93,17 +86,19 @@ spec:
             {{- toYaml .Values.pigallery2.resources | nindent 12 }}
       volumes:
         - name: config
-          {{- if .Values.pigallery2.persistence.enabled }}
+          {{- if .Values.pigallery2.persistence.config.enabled }}
           persistentVolumeClaim:
             claimName: {{ include "pigallery2.fullname" . }}-config
-          {{- else if not .Values.pigallery2.persistence.enabled }}
+          {{- else if not .Values.pigallery2.persistence.config.enabled }}
           emptyDir: {}
           {{- end }}
         - name: media
-          {{- if .Values.pigallery2.persistence.enabled }}
+          {{- if .Values.pigallery2.persistence.media.customVolume }}
+          {{- toYaml .Values.pigallery2.persistence.media.customVolume | nindent 10 }}
+          {{- else if .Values.pigallery2.persistence.media.enabled }}
           persistentVolumeClaim:
             claimName: {{ include "pigallery2.fullname" . }}-media
-          {{- else if not .Values.pigallery2.persistence.enabled }}
+          {{- else if not .Values.pigallery2.persistence.media.enabled }}
           emptyDir: {}
           {{- end }}
       {{- with .Values.nodeSelector }}
