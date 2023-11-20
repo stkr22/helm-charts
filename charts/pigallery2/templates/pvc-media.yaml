@@ -1,0 +1,14 @@
+{{- if and .Values.pigallery2.persistence.media.enabled  (not .Values.pigallery2.persistence.media.customVolume)}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "pigallery2.fullname" . }}-media
+  labels:
+    {{- include "pigallery2.labels" . | nindent 4 }}
+spec:
+  accessModes:
+  - {{ .Values.pigallery2.persistence.media.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.pigallery2.persistence.media.size }}
+{{- end }}
