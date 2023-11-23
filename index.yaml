@@ -261,6 +261,17 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/homeassistant-0.1.0/homeassistant-0.1.0.tgz
     version: 0.1.0
+  jellyfin:
+  - apiVersion: v2
+    appVersion: 10.8.12-amd64
+    created: "2023-11-23T11:13:02.725964251Z"
+    description: A Helm chart for Kubernetes
+    digest: 152a42c4359b8c0519a57195399a297ee2903cb6e7d0be4334bf29798e80590e
+    name: jellyfin
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/jellyfin-1.0.0/jellyfin-1.0.0.tgz
+    version: 1.0.0
   mosquitto:
   - apiVersion: v2
     appVersion: 2.0.15-openssl
@@ -588,4 +599,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-20T19:30:36.051273705Z"
+generated: "2023-11-23T11:13:02.726087451Z"
