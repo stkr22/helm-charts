@@ -68,7 +68,7 @@ spec:
             path: /
             port: http
           failureThreshold: 3
-          timeoutSeconds: 3
+          timeoutSeconds: 30
           periodSeconds: 20
           initialDelaySeconds: 60
         readinessProbe:
@@ -76,7 +76,7 @@ spec:
             path: /
             port: http
           failureThreshold: 3
-          timeoutSeconds: 3
+          timeoutSeconds: 30
           periodSeconds: 10
           initialDelaySeconds: 60
         startupProbe:
