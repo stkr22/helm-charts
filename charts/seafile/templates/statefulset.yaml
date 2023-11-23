@@ -32,7 +32,7 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
         env:
           - name: DB_HOST
-            value: "{{ .Release.Name }}-mariadb.{{ .Release.Namespace }}"
+            value: "{{ .Release.Name }}-mariadb.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
           - name: DB_ROOT_PASSWD
             valueFrom:
               secretKeyRef:
@@ -68,7 +68,7 @@ spec:
             path: /
             port: http
           failureThreshold: 3
-          timeoutSeconds: 30
+          timeoutSeconds: 20
           periodSeconds: 20
           initialDelaySeconds: 60
         readinessProbe:
@@ -76,7 +76,7 @@ spec:
             path: /
             port: http
           failureThreshold: 3
-          timeoutSeconds: 30
+          timeoutSeconds: 20
           periodSeconds: 10
           initialDelaySeconds: 60
         startupProbe:
