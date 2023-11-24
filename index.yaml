@@ -496,6 +496,24 @@ entries:
   seafile:
   - apiVersion: v2
     appVersion: 11.0.2
+    created: "2023-11-24T07:38:45.082704972Z"
+    dependencies:
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.1.2
+    - condition: memcached.enabled
+      name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 6.7.0
+    description: A Helm chart for Seafile Server
+    digest: 8adb1eabe1013377ee0be5f33bc21dcdbd956810c2ff7b73fa25f75366d38786
+    name: seafile
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/seafile-1.0.1/seafile-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 11.0.2
     created: "2023-11-19T22:33:49.643659497Z"
     dependencies:
     - name: mariadb
@@ -613,4 +631,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-23T11:14:58.621299191Z"
+generated: "2023-11-24T07:38:45.082844984Z"
