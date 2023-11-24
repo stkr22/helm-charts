@@ -44,6 +44,12 @@ spec:
             {{- end }}
             - name: ZIGBEE2MQTT_CONFIG_FRONTEND_PORT
               value: "8080"
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
+            {{- if .Values.mosquitto.enabled }}
+              value: "mqtt://{{ .Release.Name }}-mosquitto.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+            {{- else if ne .Values.mosquitto.serviceFqdn "" }}
+              value: "{{ .Values.mosquitto.serviceFqdn }}"
+            {{- end }}
             {{- with .Values.env }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

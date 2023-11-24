@@ -5,9 +5,11 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-env:
-  - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
-    value: mqtt://mosquitto
+mosquitto:
+  enabled: true
+  serviceFqdn: ""
+
+env: []
 
 persistence:
   enabled: true
