@@ -63,29 +63,9 @@ spec:
           {{- with .Values.seafile.env }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-          failureThreshold: 3
-          timeoutSeconds: 20
-          periodSeconds: 20
-          initialDelaySeconds: 40
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-          failureThreshold: 3
-          timeoutSeconds: 20
-          periodSeconds: 20
-          initialDelaySeconds: 40
-        startupProbe:
-          tcpSocket:
-            port: http
-          failureThreshold: 60
-          timeoutSeconds: 20
-          periodSeconds: 5
-          initialDelaySeconds: 60
+        {{- with .Values.seafile.probes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         ports:
         - name: http
           containerPort: 80
