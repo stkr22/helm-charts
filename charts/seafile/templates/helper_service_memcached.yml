@@ -6,7 +6,7 @@ metadata:
   name: memcached
 spec:
   type: ExternalName
-  externalName: "{{ .Release.Name }}-memcached.{{ .Release.Namespace }}"
+  externalName: "{{ .Release.Name }}-memcached.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
 {{- else if ne .Values.memcached.serviceFqdn "memcached" }}
 ---
 apiVersion: v1

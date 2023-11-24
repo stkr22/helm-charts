@@ -18,6 +18,9 @@
 
 # see Bitnami Memcached Chart Values
 # https://artifacthub.io/packages/helm/bitnami/memcached
+
+clusterDomain: cluster.local
+
 memcached:
   enabled: true
   serviceFqdn: memcached
@@ -60,11 +63,34 @@ seafile:
   # - mountPath: "/mnt/data/seafile"
   #   name: mnt-data-seafile
   resources: {}
+  probes:
+    # livenessProbe:
+    #   httpGet:
+    #     path: /
+    #     port: http
+    #   failureThreshold: 3
+    #   timeoutSeconds: 40
+    #   periodSeconds: 20
+    #   initialDelaySeconds: 40
+    # readinessProbe:
+    #   httpGet:
+    #     path: /
+    #     port: http
+    #   failureThreshold: 3
+    #   timeoutSeconds: 40
+    #   periodSeconds: 20
+    #   initialDelaySeconds: 40
+    startupProbe:
+      tcpSocket:
+        port: http
+      failureThreshold: 60
+      timeoutSeconds: 20
+      periodSeconds: 5
+      initialDelaySeconds: 60
 
 ingress:
+  className: ""
   annotations:
-    # use NGINX Ingress Controller
-    kubernetes.io/ingress.class: "nginx"
     # use Cert-Manager for LetsEncrypt Certificates
     # cert-manager.io/issuer: "letsencrypt-prod"
     # cert-manager.io/cluster-issuer: "letsencrypt-prod"
