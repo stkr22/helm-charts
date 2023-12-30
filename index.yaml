@@ -571,6 +571,16 @@ entries:
     version: 1.0.0
   virtual-assistant-py:
   - apiVersion: v2
+    appVersion: "20231230.1"
+    created: "2023-12-30T21:26:40.466905832Z"
+    description: A Helm chart for Kubernetes
+    digest: fc7d741646fc8e3b8e52adf47ce3cf1ab9d0c081cb3ae06e6b47a668e02d2976
+    name: virtual-assistant-py
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/virtual-assistant-py-0.2.0/virtual-assistant-py-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: "20231228.2"
     created: "2023-12-30T15:16:52.879231267Z"
     description: A Helm chart for Kubernetes
@@ -715,4 +725,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-30T15:16:52.87939956Z"
+generated: "2023-12-30T21:26:40.467072662Z"
