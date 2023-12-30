@@ -68,12 +68,18 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /docs
               port: http
+            failureThreshold: 3
+            timeoutSeconds: 2
+            periodSeconds: 60
           readinessProbe:
             httpGet:
-              path: /
+              path: /docs
               port: http
+            failureThreshold: 3
+            timeoutSeconds: 2
+            periodSeconds: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
