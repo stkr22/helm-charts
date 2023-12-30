@@ -12,7 +12,7 @@ image:
 
 
 env:
-  SPACY_MODEL: "default_model"  # Replace with your default SpaCy model
+  SPACY_MODEL: "en_core_web_sm"  # Replace with your default SpaCy model
   COMMAND_EXEC_API: "http://default-api-endpoint"  # Replace with your default API endpoint
 
 externalDatabase:
