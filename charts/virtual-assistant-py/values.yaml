@@ -20,6 +20,7 @@ externalDatabase:
   host: ""
   existingSecret: ""  # Name of the existing secret containing PostgreSQL credentials
 
+containerPort: 8000
 
 imagePullSecrets:
   - name: virtual-assistant-py-pull
@@ -40,16 +41,24 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  supplementalGroups:
+    - 1000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  privileged: false
+  seccompProfile:
+    type: RuntimeDefault
 
 service:
   type: ClusterIP
