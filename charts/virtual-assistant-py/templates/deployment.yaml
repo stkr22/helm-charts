@@ -37,23 +37,23 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            {{- if .Values.externalDatabase.existingSecret }}
-              - name: DB_HOST
-                value: {{ .Values.externalDatabase.host }}
+            {{- if .Values.externalDatabase.host }}
+            - name: DB_HOST
+              value: {{ .Values.externalDatabase.host }}
             {{- end }}
             - name: DB_PORT
               value: "5432"
             {{- if .Values.externalDatabase.existingSecret }}
-              - name: DB_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.externalDatabase.existingSecret }}
-                    key: postgresql-password
-              - name: DB_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.externalDatabase.existingSecret }}
-                    key: postgresql-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalDatabase.existingSecret }}
+                  key: postgresql-password
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalDatabase.existingSecret }}
+                  key: postgresql-username
             {{- end }}
             - name: DB_NAME
               value: {{ .Values.externalDatabase.database }}
