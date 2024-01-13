@@ -1,3 +1,5 @@
+clusterDomain: cluster.local
+
 replicaCount: 1
 
 image:
