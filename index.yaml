@@ -207,6 +207,21 @@ entries:
     version: 0.1.0
   homeassistant:
   - apiVersion: v2
+    appVersion: 2024.1.3
+    created: "2024-01-13T15:00:58.904936252Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.1.0
+    description: A Helm chart for Kubernetes
+    digest: 5cb3996641a8b9f1ea872a7bc4f96abeaf51b57f2cf946df2273b1956b64433e
+    name: homeassistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/homeassistant-2.1.2/homeassistant-2.1.2.tgz
+    version: 2.1.2
+  - apiVersion: v2
     appVersion: "2023.11"
     created: "2023-11-24T18:32:48.731667815Z"
     dependencies:
@@ -759,4 +774,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-13T09:17:54.549740672Z"
+generated: "2024-01-13T15:00:58.905059252Z"
