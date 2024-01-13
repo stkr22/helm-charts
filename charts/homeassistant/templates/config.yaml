@@ -14,7 +14,7 @@ data:
     recorder:
       purge_keep_days: 30
       commit_interval: 3
-      db_url: postgresql://PGUSER:PGPASSWORD@{{ template "homeassistant.fullname" . }}-postgresql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}/ha_recorder
+      db_url: postgresql://{{ .Values.postgresql.global.postgresql.auth.username }}:{{ .Values.postgresql.global.postgresql.auth.password }}@{{ template "homeassistant.fullname" . }}-postgresql.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}/{{ .Values.postgresql.global.postgresql.auth.database }}
     {{- end }}
     http:
       use_x_forwarded_for: true
