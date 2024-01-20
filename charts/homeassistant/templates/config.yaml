@@ -9,6 +9,13 @@ data:
     # Loads default set of integrations. Do not remove.
     default_config:
 
+    ios: !include ios.yaml
+    alert: !include alert.yaml
+    automation: !include automations.yaml
+    group: !include groups.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+
     # Load frontend themes from the themes folder
     {{- if .Values.postgresql.enabled }}
     recorder:

@@ -36,6 +36,8 @@ spec:
             - -c
           args:
             - if ! grep -q 'recorder:' '/config/configuration.yaml'; then
+              cd /config;
+              touch ios.yaml alert.yaml automations.yaml groups.yaml scripts.yaml scenes.yaml;
               sed -E -e "s:PGUSER:$POSTGRES_USER:" -e "s:PGPASSWORD:$POSTGRES_PASSWORD:" /config-init/configuration.yaml > /config/configuration.yaml;
               fi;
           env:
