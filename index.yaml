@@ -677,6 +677,20 @@ entries:
     version: 0.1.0
   zigbee2mqtt:
   - apiVersion: v2
+    appVersion: 1.36.0
+    created: "2024-03-11T19:20:30.691521015Z"
+    dependencies:
+    - name: mosquitto
+      repository: https://stkr22.github.io/helm-charts
+      version: 0.4.0
+    description: A Helm chart for Kubernetes
+    digest: bdc5a09731c3855bcc3ecd98ed12f66faef4a835358d32cfae2ba70edb7fb339
+    name: zigbee2mqtt
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-3.0.2/zigbee2mqtt-3.0.2.tgz
+    version: 3.0.2
+  - apiVersion: v2
     appVersion: 1.35.1
     created: "2024-01-13T09:17:54.549571407Z"
     dependencies:
@@ -804,4 +818,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-20T13:11:55.34775261Z"
+generated: "2024-03-11T19:20:30.691708764Z"
