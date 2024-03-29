@@ -1,0 +1,17 @@
+{{- if .Values.nodeport.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mosquitto.fullname" . }}
+  labels:
+    {{- include "mosquitto.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.service.ports.mqtt.port }}
+      targetPort: mqtt
+      protocol: TCP
+      name: mqtt
+  selector:
+    {{- include "mosquitto.selectorLabels" . | nindent 4 }}
+{{- end }}

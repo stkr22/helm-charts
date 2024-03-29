@@ -24,6 +24,9 @@ service:
       name: mqtt
       port: 1883
 
+nodeport:
+  enabled: false
+
 ingress:
   enabled: false
   className: ""
