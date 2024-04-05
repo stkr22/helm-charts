@@ -612,6 +612,21 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/pigallery2-0.1.0/pigallery2-0.1.0.tgz
     version: 0.1.0
+  private-assistant-skill-orchestrator-py:
+  - apiVersion: v2
+    appVersion: 0.1.2
+    created: "2024-04-05T20:13:39.559848034Z"
+    dependencies:
+    - name: mosquitto
+      repository: https://stkr22.github.io/helm-charts
+      version: 0.5.1
+    description: A Helm chart for Kubernetes
+    digest: 0c5f5a62ccf3b23cf79abd05b0e4c400b511b0e37f273acb3c20017a36c12099
+    name: private-assistant-skill-orchestrator-py
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/private-assistant-skill-orchestrator-py-0.1.0/private-assistant-skill-orchestrator-py-0.1.0.tgz
+    version: 0.1.0
   seafile:
   - apiVersion: v2
     appVersion: 11.0.2
@@ -867,4 +882,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-05T06:24:49.565839685Z"
+generated: "2024-04-05T20:13:39.560025616Z"
