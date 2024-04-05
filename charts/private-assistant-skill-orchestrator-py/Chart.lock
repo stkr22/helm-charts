@@ -1,0 +1,6 @@
+dependencies:
+- name: mosquitto
+  repository: https://stkr22.github.io/helm-charts
+  version: 0.5.1
+digest: sha256:e6bc8ca8137ae1789caf45263803667ad41427ea4492ee53c26ecbb83b052c5e
+generated: "2024-03-31T14:27:53.761370374Z"

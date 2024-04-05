@@ -1,0 +1,90 @@
+clusterDomain: "cluster.local"
+
+image:
+  repository: ghcr.io/stkr22/private-assistant-skill-orchestrator-py
+  pullPolicy: IfNotPresent
+  tag: ""
+
+env:
+  - name: TZ
+    value: Europe/Berlin
+
+config: |
+  custom_skill_configs:
+    light_skill:
+      homeassistant_api_url: http://homeassistant.local/api
+      homeassistant_token: DEBUG
+    music_skill:
+      command_api_url: http://node-red.local/music
+    curtain_skill:
+      homeassistant_api_url: http://homeassistant.local/api
+      homeassistant_token: DEBUG
+    scene_skill:
+      homeassistant_api_url: http://homeassistant.local/api
+      homeassistant_token: DEBUG
+    climate_skill:
+      homeassistant_api_url: http://homeassistant.local/api
+      homeassistant_token: DEBUG
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  supplementalGroups:
+    - 1000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  privileged: false
+  seccompProfile:
+    type: RuntimeDefault
+
+mosquitto:
+  nodeport:
+    enabled: true
+
+resources: {}
+
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
