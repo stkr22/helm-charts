@@ -614,6 +614,25 @@ entries:
     version: 0.1.0
   private-assistant-skill-orchestrator-py:
   - apiVersion: v2
+    appVersion: 0.2.0
+    created: "2024-04-07T19:57:14.320909652Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.4
+    - condition: mosquitto.enabled
+      name: mosquitto
+      repository: https://stkr22.github.io/helm-charts
+      version: 0.5.1
+    description: A Helm chart for Kubernetes
+    digest: 49b6752e839ddfacdcd7a56288bab6c350f0588c6665e5be53a6841d20e382b6
+    name: private-assistant-skill-orchestrator-py
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/private-assistant-skill-orchestrator-py-0.2.0/private-assistant-skill-orchestrator-py-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 0.1.2
     created: "2024-04-05T20:13:39.559848034Z"
     dependencies:
@@ -882,4 +901,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-05T20:13:39.560025616Z"
+generated: "2024-04-07T19:57:14.321099036Z"
