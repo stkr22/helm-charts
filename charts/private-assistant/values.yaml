@@ -1,32 +1,26 @@
 clusterDomain: "cluster.local"
 
-image:
-  repository: ghcr.io/stkr22/private-assistant-skill-orchestrator-py
-  pullPolicy: IfNotPresent
-  tag: ""
 
-env:
+globalEnv:
   - name: TZ
     value: Europe/Berlin
 
-config: |
-  custom_skill_configs:
-    light_skill:
-      homeassistant_api_url: http://homeassistant.local/api
-      homeassistant_token: DEBUG
-    music_skill:
-      command_api_url: http://node-red.local/music
-    curtain_skill:
-      homeassistant_api_url: http://homeassistant.local/api
-      homeassistant_token: DEBUG
-    scene_skill:
-      homeassistant_api_url: http://homeassistant.local/api
-      homeassistant_token: DEBUG
-    climate_skill:
-      homeassistant_api_url: http://homeassistant.local/api
-      homeassistant_token: DEBUG
 
-imagePullSecrets: []
+coordinator:
+  image:
+    repository: ghcr.io/stkr22/private-assistant-skill-coordinator-py
+    pullPolicy: IfNotPresent
+    tag: ""
+    pullSecret: ""
+  config: |
+    client_id: "skill_coordinator"
+
+skills:
+  globalConfig: |
+    certainty_topic: "assistant/coordinator/certainty"
+    register_topic: "assistant/coordinator/register"
+  activeSkills: []
+
 nameOverride: ""
 fullnameOverride: ""
 

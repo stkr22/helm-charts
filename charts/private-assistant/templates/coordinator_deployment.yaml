@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "private-assistant-skill-orchestrator-py.fullname" . }}
+  name: {{ include "private-assistant.fullname" . }}-coordinator
   labels:
-    {{- include "private-assistant-skill-orchestrator-py.labels" . | nindent 4 }}
+    {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "private-assistant-skill-orchestrator-py.selectorLabels" . | nindent 6 }}
+      {{- include "private-assistant.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -15,40 +15,42 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "private-assistant-skill-orchestrator-py.labels" . | nindent 8 }}
+        {{- include "private-assistant.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- if .Values.coordinator.image.pullSecret }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        - name: {{ .Values.coordinator.image.pullSecret }}
       {{- end }}
-      serviceAccountName: {{ include "private-assistant-skill-orchestrator-py.serviceAccountName" . }}
+      serviceAccountName: {{ include "private-assistant.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-coordinator
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.coordinator.image.repository }}:{{ .Values.coordinator.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.coordinator.image.pullPolicy }}
           env:
-            {{- toYaml .Values.env | nindent 12 }}
+            - name: PRIVATE_ASSISTANT_CONFIG_PATH
+              value: /app/config.yaml
+            {{- toYaml .Values.globalEnv | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: private-assistant-skill-orchestrator-py-config
-              mountPath: /app/template.yaml
-              subPath: template.yaml
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
               readOnly: true
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        - name: private-assistant-skill-orchestrator-py-config
+        - name: config
           configMap:
-            name: {{ include "private-assistant-skill-orchestrator-py.fullname" . }}-config
+            name: {{ include "private-assistant.fullname" . }}-coordinator-config
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
