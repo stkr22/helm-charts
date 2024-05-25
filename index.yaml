@@ -54,6 +54,16 @@ entries:
     version: 0.1.0
   calibre-web:
   - apiVersion: v2
+    appVersion: 0.6.21
+    created: "2024-05-25T15:19:48.776285854Z"
+    description: A Helm chart for Kubernetes
+    digest: 65924c1b66cbf956ca6202eeb121398529f293e996ef90829fc41cea7bea76d6
+    name: calibre-web
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/calibre-web-0.1.2/calibre-web-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 0.6.20
     created: "2023-10-07T13:54:44.793420238Z"
     description: A Helm chart for Kubernetes
@@ -940,4 +950,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-19T10:30:10.467264776Z"
+generated: "2024-05-25T15:19:48.776489823Z"
