@@ -68,8 +68,14 @@ spec:
               mountPath: /config
       volumes:
         - name: calibre-books-data
+          {{- if .Values.persistence.books_pvc.customVolume }}
+          {{- toYaml .Values.persistence.books_pvc.customVolume | nindent 10 }}
+          {{- else if .Values.persistence.books_pvc.enabled }}
           persistentVolumeClaim:
             claimName: {{ template "calibre-web.fullname" . }}-books-pvc
+          {{- else if not .Values.persistence.books_pvc.enabled }}
+          emptyDir: {}
+          {{- end }}
         - name: calibre-conf-data
           persistentVolumeClaim:
             claimName: {{ template "calibre-web.fullname" . }}-conf-pvc

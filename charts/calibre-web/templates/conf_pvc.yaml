@@ -6,7 +6,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   accessModes:
-    - {{ .Values.conf_pvc.accessModes }}
+    - {{ .Values.persistence.conf_pvc.accessModes }}
   resources:
     requests:
-      storage: {{ .Values.conf_pvc.storage }}
+      storage: {{ .Values.persistence.conf_pvc.storage }}

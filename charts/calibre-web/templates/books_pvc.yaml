@@ -1,3 +1,4 @@
+{{- if and .Values.persistence.books_pvc.enabled  (not .Values.persistence.books_pvc.customVolume)}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -6,7 +7,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   accessModes:
-    - {{ .Values.books_pvc.accessModes }}
+    - {{ .Values.persistence.books_pvc.accessModes }}
   resources:
     requests:
-      storage: {{ .Values.books_pvc.storage }}
+      storage: {{ .Values.persistence.books_pvc.storage }}
