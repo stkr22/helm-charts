@@ -634,6 +634,25 @@ entries:
     version: 0.1.0
   private-assistant:
   - apiVersion: v2
+    appVersion: 0.1.6
+    created: "2024-07-14T16:05:50.925406451Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.5
+    - condition: mosquitto.enabled
+      name: mosquitto
+      repository: https://stkr22.github.io/helm-charts
+      version: 0.5.1
+    description: A Helm chart for Kubernetes
+    digest: af4d056871ea89b557b9eaf81dc23cc49faea3fae26e31d055e149db07f727d2
+    name: private-assistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/private-assistant-0.1.3/private-assistant-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
     appVersion: 0.1.5
     created: "2024-04-19T10:30:10.467049223Z"
     dependencies:
@@ -960,4 +979,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-25T15:22:40.372829676Z"
+generated: "2024-07-14T16:05:50.925884317Z"
