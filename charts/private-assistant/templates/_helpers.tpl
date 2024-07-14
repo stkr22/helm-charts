@@ -24,6 +24,17 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "private-assistant.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "private-assistant.chart" -}}
@@ -60,3 +71,26 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "private-assistant.postgres.postgres-password" -}}
+{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) (include "private-assistant.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "postgres-password" -}}
+  {{- else -}}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "private-assistant.config" -}}
+mqtt_server_host: {{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}
+mqtt_server_port: {{ .Values.mosquitto.service.ports.mqtt.port }}
+db_connection_string: postgresql+psycopg2://{{ .Values.postgresql.global.postgresql.auth.username }}:{{ .Values.postgresql.global.postgresql.auth.password }}@{{ .Release.Name }}-postgresql.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.global.postgresql.auth.database }}
+{{- end -}}
+
+{{- define "private-assistant.config.base64" -}}
+{{ include "private-assistant.config" . | b64enc }}
+{{- end -}}

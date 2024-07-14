@@ -36,18 +36,25 @@ spec:
           imagePullPolicy: {{ .image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
-              value: /app/config.yaml
+              value: /config/
             {{- toYaml $.Values.globalEnv | nindent 12 }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:
-            - name: config
-              mountPath: /app/config.yaml
-              subPath: config.yaml
+            - name: baseConfig
+              mountPath: /config/base_config.yaml
+              subPath: base_config.yaml
+              readOnly: true
+            - name: skillConfig
+              mountPath: /config/skill_config.yaml
+              subPath: skill_config.yaml
               readOnly: true
       volumes:
-        - name: config
-          configMap:
-            name: {{ include "private-assistant.fullname" $ }}-{{ .name }}
+        - name: baseConfig
+          secret:
+            secretName: {{ include "private-assistant.fullname" $ }}-base-config
+        - name: skillConfig
+          secret:
+            secretName: {{ .configSecretName }}
 ---
 {{- end }}

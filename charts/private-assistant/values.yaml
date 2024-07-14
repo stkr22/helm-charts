@@ -16,10 +16,13 @@ coordinator:
     client_id: "skill_coordinator"
 
 skills:
-  globalConfig: |
-    certainty_topic: "assistant/coordinator/certainty"
-    register_topic: "assistant/coordinator/register"
   activeSkills: []
+    # - name: "curtain-skill"
+    #   image:
+    #     repository: "ghcr.io/stkr22/private-assistant-curtain-skill-py"
+    #     pullPolicy: IfNotPresent
+    #     tag: "0.1.4"
+    #   configSecretName: MySecret
 
 nameOverride: ""
 fullnameOverride: ""
@@ -64,6 +67,13 @@ mosquitto:
 
 postgresql:
   enabled: true
+  global:
+    postgresql:
+      auth:
+        username: assistant
+        password: assistant
+        database: assistant
+        existingSecret: private-assistant-postgres-access
 
 resources: {}
 
