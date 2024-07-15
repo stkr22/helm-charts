@@ -94,7 +94,7 @@ new password and use it.
   {{- if $secret -}}
     {{-  index $secret "data" "password" -}}
   {{- else -}}
-    "assistant"
+    {{ "assistant" | b64enc }}
   {{- end -}}
 {{- end -}}
 
