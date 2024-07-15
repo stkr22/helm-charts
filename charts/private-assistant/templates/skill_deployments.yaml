@@ -41,19 +41,19 @@ spec:
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:
-            - name: baseConfig
+            - name: base-config
               mountPath: /config/base_config.yaml
               subPath: base_config.yaml
               readOnly: true
-            - name: skillConfig
+            - name: skill-config
               mountPath: /config/skill_config.yaml
               subPath: skill_config.yaml
               readOnly: true
       volumes:
-        - name: baseConfig
+        - name: base-config
           secret:
             secretName: {{ include "private-assistant.fullname" $ }}-base-config
-        - name: skillConfig
+        - name: skill-config
           secret:
             secretName: {{ .configSecretName }}
 ---
