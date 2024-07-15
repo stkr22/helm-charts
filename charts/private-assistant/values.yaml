@@ -71,7 +71,6 @@ postgresql:
     postgresql:
       auth:
         username: assistant
-        password: assistant
         database: assistant
         existingSecret: private-assistant-postgres-access
 

@@ -85,6 +85,19 @@ new password and use it.
   {{- end -}}
 {{- end -}}
 
+{{/*
+Looks if there's an existing secret and reuse its password. If not it generates
+new password and use it.
+*/}}
+{{- define "private-assistant.postgres.password" -}}
+{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) (include "private-assistant.fullname" .) ) -}}
+  {{- if $secret -}}
+    {{-  index $secret "data" "password" -}}
+  {{- else -}}
+    "assistant"
+  {{- end -}}
+{{- end -}}
+
 {{- define "private-assistant.config" -}}
 mqtt_server_host: {{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}
 mqtt_server_port: {{ .Values.mosquitto.service.ports.mqtt.port }}
