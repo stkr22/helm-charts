@@ -37,6 +37,19 @@ spec:
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
               value: /config/
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.global.postgresql.auth.username }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgresql.global.postgresql.auth.database }}
+            - name: POSTGRES_HOST
+              value: {{ .Release.Name }}-postgresql.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.postgresql.primary.service.ports.postgresql | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: private-assistant-postgres-credentials
+                  key: password
             {{- toYaml $.Values.globalEnv | nindent 12 }}
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
@@ -45,16 +58,20 @@ spec:
               mountPath: /config/base_config.yaml
               subPath: base_config.yaml
               readOnly: true
-            - name: skill-config
-              mountPath: /config/skill_config.yaml
-              subPath: skill_config.yaml
-              readOnly: true
+            {{- if .image.configSecretName }}
+              - name: skill-config
+                mountPath: /config/skill_config.yaml
+                subPath: skill_config.yaml
+                readOnly: true
+            {{- end }}
       volumes:
         - name: base-config
           secret:
             secretName: {{ include "private-assistant.fullname" $ }}-base-config
-        - name: skill-config
-          secret:
-            secretName: {{ .configSecretName }}
+        {{- if .image.configSecretName }}
+          - name: skill-config
+            secret:
+              secretName: {{ .configSecretName }}
+        {{- end }}
 ---
 {{- end }}

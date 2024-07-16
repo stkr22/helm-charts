@@ -94,14 +94,13 @@ new password and use it.
   {{- if $secret -}}
     {{-  index $secret "data" "password" -}}
   {{- else -}}
-    {{ "assistant" | b64enc }}
+    {{- (randAlphaNum 40) | b64enc | quote -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "private-assistant.config" -}}
 mqtt_server_host: {{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}
 mqtt_server_port: {{ .Values.mosquitto.service.ports.mqtt.port }}
-db_connection_string: postgresql+psycopg2://{{ .Values.postgresql.global.postgresql.auth.username }}:{{ .Values.postgresql.global.postgresql.auth.password }}@{{ .Release.Name }}-postgresql.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.global.postgresql.auth.database }}
 {{- end -}}
 
 {{- define "private-assistant.config.base64" -}}
