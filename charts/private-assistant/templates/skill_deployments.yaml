@@ -58,7 +58,7 @@ spec:
               mountPath: /config/base_config.yaml
               subPath: base_config.yaml
               readOnly: true
-            {{- if .image.configSecretName }}
+            {{- if .configSecretName }}
               - name: skill-config
                 mountPath: /config/skill_config.yaml
                 subPath: skill_config.yaml
@@ -68,7 +68,7 @@ spec:
         - name: base-config
           secret:
             secretName: {{ include "private-assistant.fullname" $ }}-base-config
-        {{- if .image.configSecretName }}
+        {{- if .configSecretName }}
           - name: skill-config
             secret:
               secretName: {{ .configSecretName }}
