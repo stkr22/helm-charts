@@ -77,7 +77,7 @@ Looks if there's an existing secret and reuse its password. If not it generates
 new password and use it.
 */}}
 {{- define "private-assistant.postgres.postgres-password" -}}
-{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) (include "private-assistant.fullname" .) ) -}}
+{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) "private-assistant-postgres-credentials" ) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "postgres-password" -}}
   {{- else -}}
@@ -90,7 +90,7 @@ Looks if there's an existing secret and reuse its password. If not it generates
 new password and use it.
 */}}
 {{- define "private-assistant.postgres.password" -}}
-{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) (include "private-assistant.fullname" .) ) -}}
+{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) "private-assistant-postgres-credentials" ) -}}
   {{- if $secret -}}
     {{-  index $secret "data" "password" -}}
   {{- else -}}
