@@ -26,6 +26,7 @@ service:
 
 nodeport:
   enabled: false
+  port: ""
 
 ingress:
   enabled: false

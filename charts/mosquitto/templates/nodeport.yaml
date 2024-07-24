@@ -9,6 +9,9 @@ spec:
   type: NodePort
   ports:
     - port: {{ .Values.service.ports.mqtt.port }}
+      {{- if .Values.nodeport.port -}}
+      nodePort: {{ .Values.nodeport.port }}
+      {{- end }}
       targetPort: mqtt
       protocol: TCP
       name: mqtt
