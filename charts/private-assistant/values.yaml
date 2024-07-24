@@ -72,7 +72,8 @@ postgresql:
       auth:
         username: assistant
         database: assistant
-        existingSecret: private-assistant-postgres-credentials
+        password: assistant
+        postgresPassword: postgres
 
 resources: {}
 

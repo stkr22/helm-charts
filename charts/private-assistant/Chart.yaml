@@ -2,7 +2,7 @@ apiVersion: v2
 name: private-assistant
 description: A Helm chart for Kubernetes
 type: application
-version: 0.1.11
+version: 0.1.12
 appVersion: "0.1.6"
 dependencies:
   - name: postgresql
@@ -10,6 +10,6 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: mosquitto
-    version: 0.5.1
+    version: 0.5.2
     repository: https://stkr22.github.io/helm-charts
     condition: mosquitto.enabled
