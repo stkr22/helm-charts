@@ -1,9 +1,9 @@
 dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 15.2.5
+  version: 15.5.20
 - name: mosquitto
   repository: https://stkr22.github.io/helm-charts
   version: 0.5.3
-digest: sha256:1bf30a672e2d6e53a1a0e18bfdc5b27e023f8421bc9fd26e045d03a9f7ae5a12
-generated: "2024-07-26T07:28:11.873432475Z"
+digest: sha256:736a922f69e45adf0f63627afe6e967e1ba4b515291911d5ce758a9bb5a8b716
+generated: "2024-07-27T10:47:59.802383799Z"
