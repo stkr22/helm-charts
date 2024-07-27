@@ -14,6 +14,7 @@ coordinator:
     pullSecret: ""
   config: |
     client_id: "skill_coordinator"
+  resources: {}
 
 skills:
   activeSkills: []
@@ -23,6 +24,7 @@ skills:
     #     pullPolicy: IfNotPresent
     #     tag: "0.1.4"
     #   configSecretName: MySecret
+    #   resources: {}
 
 nameOverride: ""
 fullnameOverride: ""
@@ -74,9 +76,6 @@ postgresql:
         database: assistant
         password: assistant
         postgresPassword: postgres
-
-resources: {}
-
 
 # Additional volumes on the output Deployment definition.
 volumes: []
