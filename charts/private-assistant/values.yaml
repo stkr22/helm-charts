@@ -16,6 +16,16 @@ coordinator:
     client_id: "skill_coordinator"
   resources: {}
 
+intentEngine:
+  image:
+    repository: ghcr.io/stkr22/private-assistant-skill-intent-engine-py
+    pullPolicy: IfNotPresent
+    tag: ""
+    pullSecret: ""
+  config: |
+    client_id: "intent_engine"
+  resources: {}
+
 skills:
   activeSkills: []
     # - name: "curtain-skill"
