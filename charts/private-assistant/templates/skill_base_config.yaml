@@ -6,6 +6,6 @@ metadata:
   labels:
     {{- include "private-assistant.labels" . | nindent 4 }}
 data:
-  config.yaml: |
+  base_config.yaml: |
     mqtt_server_host: {{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{- if ne $clusterDomain "" }}.{{ $clusterDomain }}{{- end }}
     mqtt_server_port: {{ .Values.mosquitto.service.ports.mqtt.port }}
