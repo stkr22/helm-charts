@@ -66,8 +66,8 @@ spec:
             {{- end }}
       volumes:
         - name: base-config
-          secret:
-            secretName: {{ include "private-assistant.fullname" $ }}-base-config
+          configMap:
+            name: {{ include "private-assistant.fullname" . }}-skill-base-config
         {{- if .configSecretName }}
         - name: skill-config
           secret:

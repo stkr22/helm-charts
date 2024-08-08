@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "private-assistant.fullname" . }}-intent-engine
+  labels:
+    {{- include "private-assistant.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "private-assistant.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "private-assistant.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.intentEngine.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.intentEngine.image.pullSecret }}
+      {{- end }}
+      serviceAccountName: {{ include "private-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-intent-engine
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.intentEngine.image.repository }}:{{ .Values.intentEngine.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.intentEngine.image.pullPolicy }}
+          env:
+            - name: PRIVATE_ASSISTANT_CONFIG_PATH
+              value: /app/config.yaml
+            {{- toYaml .Values.globalEnv | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+              readOnly: true
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.intentEngine.resources | nindent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "private-assistant.fullname" . }}-intent-engine-config
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
