@@ -18,7 +18,7 @@ coordinator:
 
 intentEngine:
   image:
-    repository: ghcr.io/stkr22/private-assistant-skill-intent-engine-py
+    repository: ghcr.io/stkr22/private-assistant-intent-engine-py
     pullPolicy: IfNotPresent
     tag: "0.0.2"
     pullSecret: ""
