@@ -10,7 +10,7 @@ coordinator:
   image:
     repository: ghcr.io/stkr22/private-assistant-skill-coordinator-py
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: "0.1.6"
     pullSecret: ""
   config: |
     client_id: "skill_coordinator"
@@ -20,7 +20,7 @@ intentEngine:
   image:
     repository: ghcr.io/stkr22/private-assistant-skill-intent-engine-py
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: "0.0.2"
     pullSecret: ""
   config: |
     client_id: "intent_engine"
