@@ -56,10 +56,6 @@ spec:
               value: "true"
             - name: ZIGBEE2MQTT_CONFIG_MQTT_VERSION
               value: "5"
-            # - name: ZIGBEE2MQTT_CONFIG_MQTT_USER
-            #   value: "admin"
-            # - name: ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD
-            #   value: admin@123
             - name: ZIGBEE2MQTT_CONFIG_PERMIT_JOIN
               value: "false"
             - name: ZIGBEE2MQTT_CONFIG_ADVANCED_HOMEASSISTANT_DISCOVERY_TOPIC
@@ -132,7 +128,10 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: config-data
-          {{- if .Values.persistence.enabled }}
+          {{- if .Values.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim }}
+          {{- else if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ include "zigbee2mqtt.fullname" . }}
           {{- else }}

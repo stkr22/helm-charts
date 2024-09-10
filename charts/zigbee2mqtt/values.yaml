@@ -18,6 +18,7 @@ persistence:
   size: 2Gi
   mountPath: /data
   accessMode: ReadWriteOnce
+  existingClaim: ""  # Add this field for specifying an existing PVC
 
 usb:
   enabled: false
@@ -66,7 +67,6 @@ resources:
   # requests:
   #   cpu: 70m
   #   memory: 80Mi
-
 
 nodeSelector: {}
 
