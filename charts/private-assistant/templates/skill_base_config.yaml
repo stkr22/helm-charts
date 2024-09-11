@@ -7,4 +7,4 @@ metadata:
     {{- include "private-assistant.labels" . | nindent 4 }}
 data:
   base_config.yaml: |
-    {{ include "private-assistant.config" . }}
+    {{ include "private-assistant.config" . | nindent 4}}
