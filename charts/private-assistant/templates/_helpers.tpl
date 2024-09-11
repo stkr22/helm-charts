@@ -99,8 +99,8 @@ new password and use it.
 {{- end -}}
 
 {{- define "private-assistant.config" -}}
-mqtt_server_host: {{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{- if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{- end }}
-mqtt_server_port: {{ .Values.mosquitto.service.ports.mqtt.port }}
+mqtt_server_host: {{ if .Values.mosquitto.serviceHostOverwrite }}{{ .Values.mosquitto.serviceHostOverwrite }}{{ else }}{{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}{{ end }}
+mqtt_server_port: {{ if .Values.mosquitto.servicePortOverwrite }}{{ .Values.mosquitto.servicePortOverwrite }}{{ else }}{{ .Values.mosquitto.service.ports.mqtt.port }}{{ end }}
 {{- end -}}
 
 {{- define "private-assistant.config.base64" -}}

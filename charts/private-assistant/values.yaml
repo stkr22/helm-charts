@@ -76,6 +76,9 @@ mosquitto:
   enabled: true
   nodeport:
     enabled: true
+  serviceHostOverwrite: ""  # Optional: Provide a custom MQTT server host
+  servicePortOverwrite: ""  # Optional: Provide a custom MQTT server port
+
 
 postgresql:
   enabled: true
