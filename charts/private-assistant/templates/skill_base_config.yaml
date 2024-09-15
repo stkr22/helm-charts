@@ -1,10 +1,14 @@
 {{- $clusterDomain := .Values.clusterDomain | default "" -}}
+{{- range .Values.skills.activeSkills }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "private-assistant.fullname" . }}-skill-base-config
+  name: {{ include "private-assistant.fullname" $ }}-{{ .name }}-skill-base-config
   labels:
-    {{- include "private-assistant.labels" . | nindent 4 }}
+    {{- include "private-assistant.labels" $ | nindent 4 }}
 data:
   base_config.yaml: |
-    {{ include "private-assistant.config" . | nindent 4}}
+    {{ include "private-assistant.config" $ | nindent 4 }}
+    {{ toYaml .config | nindent 4 }}
+---
+{{- end }}

@@ -29,6 +29,8 @@ intentEngine:
 skills:
   activeSkills: []
     # - name: "curtain-skill"
+    #   config:
+    #     client_id: "curtain_skill"
     #   image:
     #     repository: "ghcr.io/stkr22/private-assistant-curtain-skill-py"
     #     pullPolicy: IfNotPresent
