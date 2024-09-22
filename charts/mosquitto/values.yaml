@@ -28,6 +28,12 @@ nodeport:
   enabled: false
   port: ""
 
+
+loadBalancer:
+  enabled: false
+  annotations: {}
+
+
 ingress:
   enabled: false
   className: ""
