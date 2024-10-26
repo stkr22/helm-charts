@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
+  replicas: 1
   selector:
     matchLabels:
       {{- include "private-assistant.selectorLabels" . | nindent 6 }}
