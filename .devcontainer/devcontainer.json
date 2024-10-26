@@ -1,6 +1,6 @@
 {
-	"name": "Kubernetes - Minikube-in-Docker",
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"name": "helm-charts-dev-environment",
+	"image": "mcr.microsoft.com/devcontainers/base:debian",
 	"runArgs": [
 		"--userns=keep-id"
 	],
@@ -8,19 +8,26 @@
 		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
 			"version": "latest",
 			"helm": "latest",
-			"minikube": "latest"
+			"minikube": "none"
 		}
 	},
 	"containerEnv": {
 		"HOME": "/home/vscode"
 	},
+	"mounts": [
+		{
+			"source": "${localEnv:HOME}/.kube",
+			"target": "/home/vscode/.kube",
+			"type": "bind"
+		}
+	],
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"ms-kubernetes-tools.vscode-kubernetes-tools",
 				"GitHub.vscode-pull-request-github",
-				"donjayamanne.githistory"
+				"mhutchie.git-graph"
 			]
 		}
 	}
