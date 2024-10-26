@@ -31,7 +31,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-bridge
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.bridge.securityContext | nindent 12 }}
           image: "{{ .Values.bridge.image.repository }}:{{ .Values.bridge.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.bridge.image.pullPolicy }}
           env:
