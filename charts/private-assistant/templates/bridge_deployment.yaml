@@ -45,12 +45,14 @@ spec:
           livenessProbe:
             httpGet:
               port: http
+              path: /health
             initialDelaySeconds: 5
             failureThreshold: 3
             periodSeconds: 60
           readinessProbe:
             httpGet:
               port: http
+              path: /health
             initialDelaySeconds: 5
             failureThreshold: 3
             periodSeconds: 15
