@@ -6,15 +6,34 @@ globalEnv:
     value: Europe/Berlin
 
 
-coordinator:
+bridge:
   image:
-    repository: ghcr.io/stkr22/private-assistant-skill-coordinator-py
+    replicas: 1
+    repository: ghcr.io/stkr22/private-assistant-comms-bridge-py
     pullPolicy: IfNotPresent
-    tag: "0.1.6"
+    tag: "1.1.1"
     pullSecret: ""
   config: |
-    client_id: "skill_coordinator"
+    speech_transcription_api: "http://127.0.0.1:8080/transcribe"
+    speech_transcription_api_token: "DEBUG"
+    speech_synthesis_api: "http://127.0.0.1:8181/synthesizeSpeech"
+    speech_synthesis_api_token: "DEBUG"
   resources: {}
+  service:
+    type: ClusterIP
+  ingress:
+    enable: true
+    className: "traefik"
+    annotations: {}
+    hosts:
+      - host: api.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
 
 intentEngine:
   image:
@@ -95,18 +114,3 @@ postgresql:
         database: assistant
         password: assistant
         postgresPassword: postgres
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "private-assistant.fullname" . }}-bridge
+  labels:
+    {{- include "private-assistant.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "private-assistant.selectorLabels" . | nindent 6 }}
+  template:
+    replicas: {{ .Values.bridge.replicas }}
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "private-assistant.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.bridge.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.bridge.image.pullSecret }}
+      {{- end }}
+      serviceAccountName: {{ include "private-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-bridge
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.bridge.image.repository }}:{{ .Values.bridge.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.bridge.image.pullPolicy }}
+          env:
+            - name: PRIVATE_ASSISTANT_API_CONFIG_PATH
+              value: /app/config.yaml
+            {{- toYaml .Values.globalEnv | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.bridge.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "private-assistant.fullname" . }}-bridge-config
