@@ -11,7 +11,7 @@ bridge:
     replicas: 1
     repository: ghcr.io/stkr22/private-assistant-comms-bridge-py
     pullPolicy: IfNotPresent
-    tag: "1.1.1"
+    tag: "1.1.2"
     pullSecret: ""
   config: |
     speech_transcription_api: "http://127.0.0.1:8080/transcribe"
