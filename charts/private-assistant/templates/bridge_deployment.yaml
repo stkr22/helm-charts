@@ -9,7 +9,6 @@ spec:
     matchLabels:
       {{- include "private-assistant.selectorLabels" . | nindent 6 }}
   template:
-    replicas: {{ .Values.bridge.replicas }}
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
@@ -21,6 +20,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      replicas: {{ .Values.bridge.replicas }}
       {{- if .Values.bridge.image.pullSecret }}
       imagePullSecrets:
         - name: {{ .Values.bridge.image.pullSecret }}
@@ -59,7 +59,6 @@ spec:
           startupProbe:
             tcpSocket:
               port: http
-            initialDelaySeconds: 0
             failureThreshold: 30
             periodSeconds: 5
           resources:
