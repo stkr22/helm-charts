@@ -20,14 +20,6 @@ metadata:
     {{- include "pigallery2.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |-
-      sendfile on;
-      tcp_nopush on;
-      tcp_nodelay on;
-      keepalive_timeout 65;
-      types_hash_max_size 2048;
-      default_type application/octet-stream;
-      gzip on;
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -41,18 +33,31 @@ spec:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
+      {{- if .secretName }}
       secretName: {{ .secretName }}
+      {{- end }}
     {{- end }}
   {{- end }}
   rules:
-    - host: {{ .Values.ingress.host | quote }}
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
       http:
         paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ include "pigallery2.fullname" . }}-service-web
-              port:
-                name: http
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-web
+                port:
+                  name: http
+              {{- else }}
+              serviceName: {{ $fullName }}-web
+              servicePort: 80
+              {{- end }}
+          {{- end }}
+    {{- end }}
 {{- end }}
