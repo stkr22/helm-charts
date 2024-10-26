@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.bridge.replicas }}
   selector:
     matchLabels:
       {{- include "private-assistant.selectorLabels" . | nindent 6 }}
@@ -20,7 +21,6 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      replicas: {{ .Values.bridge.replicas }}
       {{- if .Values.bridge.image.pullSecret }}
       imagePullSecrets:
         - name: {{ .Values.bridge.image.pullSecret }}
