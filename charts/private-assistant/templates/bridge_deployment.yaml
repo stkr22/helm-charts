@@ -8,6 +8,7 @@ spec:
   replicas: {{ .Values.bridge.replicas }}
   selector:
     matchLabels:
+      app.kubernetes.io/component: bridge
       {{- include "private-assistant.selectorLabels" . | nindent 6 }}
   template:
     metadata:
@@ -16,6 +17,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        app.kubernetes.io/component: bridge
         {{- include "private-assistant.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
