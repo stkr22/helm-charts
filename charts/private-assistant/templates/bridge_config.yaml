@@ -8,4 +8,5 @@ metadata:
 data:
   config.yaml: |
     {{ include "private-assistant.config" . | nindent 4 }}
+    {{ include "private-assistant.bridgeConfig" . | nindent 4 }}
     {{- .Values.bridge.config | nindent 4 }}

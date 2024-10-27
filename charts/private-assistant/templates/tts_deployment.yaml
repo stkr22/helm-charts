@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "private-assistant.fullname" . }}-tts-engine
+  labels:
+    {{- include "private-assistant.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ttsEngine.replicas }}
+  selector:
+    matchLabels:
+      {{- include "private-assistant.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "private-assistant.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.ttsEngine.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.ttsEngine.image.pullSecret }}
+      {{- end }}
+      serviceAccountName: {{ include "private-assistant.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-tts-engine
+          securityContext:
+            {{- toYaml .Values.ttsEngine.securityContext | nindent 12 }}
+          image: "{{ .Values.ttsEngine.image.repository }}:{{ .Values.ttsEngine.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.ttsEngine.image.pullPolicy }}
+          env:
+            - name: TTS_MODEL
+              value: {{ .Values.ttsEngine.config.ttsModel }}
+            - name: ALLOWED_USER_TOKEN
+              value: {{ .Values.ttsEngine.config.allowedUserToken }}
+            {{- toYaml .Values.globalEnv | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /health
+            initialDelaySeconds: 5
+            failureThreshold: 3
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /health
+            initialDelaySeconds: 5
+            failureThreshold: 3
+            periodSeconds: 15
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.ttsEngine.resources | nindent 12 }}

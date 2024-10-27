@@ -5,19 +5,42 @@ globalEnv:
   - name: TZ
     value: Europe/Berlin
 
+ttsEngine:
+  image:
+    repository: ghcr.io/stkr22/tts-batch-api-py
+    pullPolicy: IfNotPresent
+    tag: "2.3.0"
+    pullSecret: ""
+  replicas: 1
+  config:
+    ttsModel: en_US-kathleen-low
+    allowedUserToken: DEBUG
+  resources: {}
+  service:
+    type: ClusterIP
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
 
 bridge:
   image:
-    replicas: 1
     repository: ghcr.io/stkr22/private-assistant-comms-bridge-py
     pullPolicy: IfNotPresent
-    tag: "1.1.2"
+    tag: "1.2.0"
     pullSecret: ""
+  replicas: 1
   config: |
     speech_transcription_api: "http://127.0.0.1:8080/transcribe"
     speech_transcription_api_token: "DEBUG"
-    speech_synthesis_api: "http://127.0.0.1:8181/synthesizeSpeech"
-    speech_synthesis_api_token: "DEBUG"
   resources: {}
   service:
     type: ClusterIP
@@ -34,18 +57,18 @@ bridge:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-    securityContext:
-      capabilities:
-        drop:
-          - ALL
-      runAsUser: 1000
-      runAsGroup: 1000
-      runAsNonRoot: false
-      readOnlyRootFilesystem: false
-      allowPrivilegeEscalation: false
-      privileged: false
-      seccompProfile:
-        type: RuntimeDefault
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsUser: 1000
+    runAsGroup: 1000
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
 
 intentEngine:
   image:

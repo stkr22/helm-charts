@@ -103,6 +103,11 @@ mqtt_server_host: {{ if .Values.mosquitto.serviceHostOverwrite }}{{ .Values.mosq
 mqtt_server_port: {{ if .Values.mosquitto.servicePortOverwrite }}{{ .Values.mosquitto.servicePortOverwrite }}{{ else }}{{ .Values.mosquitto.service.ports.mqtt.port }}{{ end }}
 {{- end -}}
 
+{{- define "private-assistant.bridgeConfig" -}}
+speech_synthesis_api: {{ if .Values.bridge.ttsServiceHostOverwrite }}{{ .Values.bridge.ttsServiceHostOverwrite }}{{ else }}{{ .Release.Name }}-tts-engine.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}/synthesizeSpeech{{ end }}{{ end }}
+speech_synthesis_api_token: {{ if .Values.bridge.ttsServiceTokenOverwrite }}{{ .Values.bridge.ttsServiceTokenOverwrite }}{{ else }}{{ .Values.ttsEngine.config.allowedUserToken }}{{ end }}
+{{- end -}}
+
 {{- define "private-assistant.config.base64" -}}
 {{ include "private-assistant.config" . | b64enc }}
 {{- end -}}
