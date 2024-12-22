@@ -24,9 +24,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.8.1
+        uses: azure/setup-helm@v4
 
       - name: Adding bitnami dependencies
         id: adding-bitnami-dependencies
