@@ -41,7 +41,7 @@ spec:
               value: {{ .Values.ttsEngine.config.ttsModel }}
             - name: ALLOWED_USER_TOKEN
               value: {{ .Values.ttsEngine.config.allowedUserToken }}
-            - name: REDIS_URL
+            - name: REDIS_HOST
               value: {{ .Release.Name }}-redis-master.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}
             - name: REDIS_PORT
               value: "6379"
