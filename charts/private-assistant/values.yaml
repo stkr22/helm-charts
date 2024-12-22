@@ -16,7 +16,7 @@ ttsEngine:
     ttsModel: en_US-kathleen-low.onnx
     allowedUserToken: DEBUG
     enableCache: true
-    cacheTTL: 86400  # 24 hours in seconds
+    cacheTTL: 604800
   resources: {}
   service:
     type: ClusterIP
