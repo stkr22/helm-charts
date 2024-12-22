@@ -13,7 +13,7 @@ ttsEngine:
     pullSecret: ""
   replicas: 1
   config:
-    ttsModel: en_US-kathleen-low
+    ttsModel: en_US-kathleen-low.onnx
     allowedUserToken: DEBUG
     enableCache: true
     cacheTTL: 86400  # 24 hours in seconds
