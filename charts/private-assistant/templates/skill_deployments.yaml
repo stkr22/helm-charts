@@ -51,6 +51,7 @@ spec:
                 secretKeyRef:
                   name: {{ $.Values.postgresql.global.postgresql.auth.existingSecret }}
                   key: password
+            {{- toYaml .env | nindent 12 }}
             {{- toYaml $.Values.globalEnv | nindent 12 }}
           resources:
             {{- toYaml .resources | nindent 12 }}
