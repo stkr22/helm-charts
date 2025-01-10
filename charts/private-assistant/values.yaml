@@ -24,8 +24,8 @@ ttsEngine:
     capabilities:
       drop:
         - ALL
-    runAsUser: 1000
-    runAsGroup: 1000
+    runAsUser: 1001
+    runAsGroup: 1001
     runAsNonRoot: true
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
@@ -80,9 +80,33 @@ intentEngine:
     pullSecret: ""
   config: |
     client_id: "intent_engine"
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
   resources: {}
 
 skills:
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
   activeSkills: []
     # - name: "curtain-skill"
     #   config:
@@ -112,17 +136,17 @@ podAnnotations: {}
 podLabels: {}
 
 podSecurityContext:
-  fsGroup: 1000
+  fsGroup: 1001
   fsGroupChangePolicy: OnRootMismatch
   supplementalGroups:
-    - 1000
+    - 1001
 
 securityContext:
   capabilities:
     drop:
       - ALL
-  runAsUser: 1000
-  runAsGroup: 1000
+  runAsUser: 1001
+  runAsGroup: 1001
   runAsNonRoot: true
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false

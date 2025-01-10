@@ -31,7 +31,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-intent-engine
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.intentEngine.securityContext | nindent 12 }}
           image: "{{ .Values.intentEngine.image.repository }}:{{ .Values.intentEngine.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.intentEngine.image.pullPolicy }}
           env:
