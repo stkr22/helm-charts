@@ -1,9 +1,9 @@
 dependencies:
 - name: mosquitto
   repository: https://stkr22.github.io/helm-charts
-  version: 0.5.3
+  version: 0.6.0
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 20.6.0
-digest: sha256:3ed6ad095f7f3872492d69b4abbd09923f01bb2092f877c90c66573fa04c2a65
-generated: "2025-03-08T20:09:23.177717074Z"
+digest: sha256:b6aeda28defe5f996ce2ab1a73b296c99d25e66810c16a68ac3fa1618e8fa1b4
+generated: "2025-03-09T19:24:36.758076567Z"
