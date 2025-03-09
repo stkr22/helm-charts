@@ -7,9 +7,8 @@ globalEnv:
 
 ttsEngine:
   image:
-    repository: ghcr.io/stkr22/tts-batch-api-py
+    repository: ghcr.io/stkr22/tts-batch-api-py:3.0.0
     pullPolicy: IfNotPresent
-    tag: "3.0.0"
     pullSecret: ""
   replicas: 1
   config:
@@ -35,9 +34,8 @@ ttsEngine:
 
 bridge:
   image:
-    repository: ghcr.io/stkr22/private-assistant-comms-bridge-py
+    repository: ghcr.io/stkr22/private-assistant-comms-bridge-py:1.5.1
     pullPolicy: IfNotPresent
-    tag: "1.5.1"
     pullSecret: ""
   replicas: 1
   config: |
@@ -74,9 +72,8 @@ bridge:
 
 intentEngine:
   image:
-    repository: ghcr.io/stkr22/private-assistant-intent-engine-py
+    repository: ghcr.io/stkr22/private-assistant-intent-engine-py:0.0.2
     pullPolicy: IfNotPresent
-    tag: "0.0.2"
     pullSecret: ""
   config: |
     client_id: "intent_engine"
@@ -95,6 +92,32 @@ intentEngine:
   resources: {}
 
 skills:
+  globalEnv:
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          name: private-assistant-postgres-app
+          key: username
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          name: private-assistant-postgres-app
+          key: database
+    - name: POSTGRES_HOST
+      valueFrom:
+        secretKeyRef:
+          name: private-assistant-postgres-app
+          key: host
+    - name: POSTGRES_PORT
+      valueFrom:
+        secretKeyRef:
+          name: private-assistant-postgres-app
+          key: port
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: private-assistant-postgres-app
+          key: password
   securityContext:
     capabilities:
       drop:
@@ -112,9 +135,8 @@ skills:
     #   config:
     #     client_id: "curtain_skill"
     #   image:
-    #     repository: "ghcr.io/stkr22/private-assistant-curtain-skill-py"
+    #     repository: "ghcr.io/stkr22/private-assistant-curtain-skill-py:0.1.4"
     #     pullPolicy: IfNotPresent
-    #     tag: "0.1.4"
     #   configSecretName: MySecret
     #   resources: {}
 
@@ -164,17 +186,6 @@ mosquitto:
         port: 1883  # Default MQTT port
   serviceHostOverwrite: ""  # Optional: Provide a custom MQTT server host
   servicePortOverwrite: ""  # Optional: Provide a custom MQTT server port
-
-
-postgresql:
-  enabled: true
-  global:
-    postgresql:
-      auth:
-        username: assistant
-        database: assistant
-        password: assistant
-        postgresPassword: postgres
 
 
 redis:

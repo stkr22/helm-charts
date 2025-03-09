@@ -26,7 +26,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       - name: seafile
-        image: "{{ .Values.seafile.image.repository }}:{{ .Values.seafile.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.seafile.image.repository }}"
         imagePullPolicy: {{ .Values.seafile.image.pullPolicy }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}

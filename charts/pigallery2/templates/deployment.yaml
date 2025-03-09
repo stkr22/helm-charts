@@ -31,7 +31,7 @@ spec:
         - name: pigallery2
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.pigallery2.image.repository }}:{{ .Values.pigallery2.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.pigallery2.image.repository }}"
           imagePullPolicy: {{ .Values.pigallery2.image.pullPolicy }}
           ports:
             - name: http

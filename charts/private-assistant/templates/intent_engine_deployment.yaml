@@ -32,14 +32,12 @@ spec:
         - name: {{ .Chart.Name }}-intent-engine
           securityContext:
             {{- toYaml .Values.intentEngine.securityContext | nindent 12 }}
-          image: "{{ .Values.intentEngine.image.repository }}:{{ .Values.intentEngine.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.intentEngine.image.repository }}"
           imagePullPolicy: {{ .Values.intentEngine.image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
               value: /app/config.yaml
             {{- toYaml .Values.globalEnv | nindent 12 }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml

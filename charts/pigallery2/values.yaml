@@ -12,10 +12,8 @@ replicaCount: 1
 
 pigallery2:
   image:
-    repository: bpatrik/pigallery2
+    repository: bpatrik/pigallery2:2.0.0-alpine
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
   persistence:
     config:
       enabled: true

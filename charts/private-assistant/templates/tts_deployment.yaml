@@ -34,7 +34,7 @@ spec:
         - name: {{ .Chart.Name }}-tts-engine
           securityContext:
             {{- toYaml .Values.ttsEngine.securityContext | nindent 12 }}
-          image: "{{ .Values.ttsEngine.image.repository }}:{{ .Values.ttsEngine.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.ttsEngine.image.repository }}"
           imagePullPolicy: {{ .Values.ttsEngine.image.pullPolicy }}
           env:
             - name: TTS_MODEL
