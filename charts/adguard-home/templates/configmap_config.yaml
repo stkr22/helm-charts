@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "adguard-home.fullname" . }}-config
-  labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-data:
-  AdGuardHome.yaml: |
-    {{ .Values.configmap_config | nindent 4 }}
