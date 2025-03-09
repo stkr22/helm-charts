@@ -7,7 +7,7 @@ globalEnv:
 
 ttsEngine:
   image:
-    repository: ghcr.io/stkr22/tts-batch-api-py:3.0.0
+    repository: ghcr.io/stkr22/tts-batch-api-py:4.0.1
     pullPolicy: IfNotPresent
     pullSecret: ""
   replicas: 1
@@ -34,7 +34,7 @@ ttsEngine:
 
 bridge:
   image:
-    repository: ghcr.io/stkr22/private-assistant-comms-bridge-py:1.5.1
+    repository: ghcr.io/stkr22/private-assistant-comms-bridge-py:2.0.1
     pullPolicy: IfNotPresent
     pullSecret: ""
   replicas: 1
@@ -72,7 +72,7 @@ bridge:
 
 intentEngine:
   image:
-    repository: ghcr.io/stkr22/private-assistant-intent-engine-py:0.0.2
+    repository: ghcr.io/stkr22/private-assistant-intent-engine-py:0.4.2
     pullPolicy: IfNotPresent
     pullSecret: ""
   config: |
