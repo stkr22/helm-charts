@@ -34,7 +34,7 @@ spec:
         - name: {{ .Chart.Name }}-bridge
           securityContext:
             {{- toYaml .Values.bridge.securityContext | nindent 12 }}
-          image: "{{ .Values.bridge.image.repository }}:{{ .Values.bridge.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.bridge.image.repository }}"
           imagePullPolicy: {{ .Values.bridge.image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_API_CONFIG_PATH

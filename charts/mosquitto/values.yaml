@@ -1,9 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: eclipse-mosquitto
+  repository: eclipse-mosquitto:2.0.18-openssl
   pullPolicy: IfNotPresent
-  tag: ""
 
 env:
   - name: TZ

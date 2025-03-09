@@ -3,9 +3,8 @@ clusterDomain: cluster.local
 replicaCount: 1
 
 image:
-  repository: koenkk/zigbee2mqtt
+  repository: koenkk/zigbee2mqtt:2.1.3
   pullPolicy: IfNotPresent
-  tag: ""
 
 mosquitto:
   enabled: true

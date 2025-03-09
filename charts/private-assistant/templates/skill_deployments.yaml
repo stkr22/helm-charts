@@ -33,25 +33,15 @@ spec:
         - name: {{ .name }}
           securityContext:
             {{- toYaml $.Values.skills.securityContext | nindent 12 }}
-          image: "{{ .image.repository }}:{{ .image.tag }}"
+          image: "{{ .image.repository }}"
           imagePullPolicy: {{ .image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
               value: /config/
-            - name: POSTGRES_USER
-              value: {{ $.Values.postgresql.global.postgresql.auth.username }}
-            - name: POSTGRES_DB
-              value: {{ $.Values.postgresql.global.postgresql.auth.database }}
-            - name: POSTGRES_HOST
-              value: {{ $.Release.Name }}-postgresql.{{ $.Release.Namespace }}.svc{{- if ne $.Values.clusterDomain "" }}.{{ $.Values.clusterDomain }}{{- end }}
-            - name: POSTGRES_PORT
-              value: {{ $.Values.postgresql.primary.service.ports.postgresql | quote }}
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $.Values.postgresql.global.postgresql.auth.existingSecret }}
-                  key: password
             {{- with .env }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with $.Values.skills.globalEnv }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
             {{- with $.Values.globalEnv }}

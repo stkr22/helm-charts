@@ -43,8 +43,7 @@ serviceAccount:
 seafile:
   replicas: 1
   image:
-    repository: seafileltd/seafile-mc
-    tag: ""
+    repository: seafileltd/seafile-mc:11.0.2
     pullPolicy: IfNotPresent
   existingSecret: ""
   auth:
