@@ -10,6 +10,6 @@ dependencies:
     repository: https://stkr22.github.io/helm-charts
     condition: mosquitto.enabled
   - name: redis
-    version: 20.6.0
+    version: 20.13.0
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
