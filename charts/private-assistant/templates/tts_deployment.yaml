@@ -37,7 +37,7 @@ spec:
           image: "{{ .Values.ttsEngine.image.repository }}"
           imagePullPolicy: {{ .Values.ttsEngine.image.pullPolicy }}
           env:
-            - name: TTS_MODEL
+            - name: TTS_DEFAULT_MODEL
               value: {{ .Values.ttsEngine.config.ttsModel }}
             - name: ALLOWED_USER_TOKEN
               value: {{ .Values.ttsEngine.config.allowedUserToken }}
