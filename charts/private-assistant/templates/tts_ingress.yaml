@@ -50,11 +50,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}-tts
+                name: {{ $fullName }}-tts-engine
                 port:
                   name: http
               {{- else }}
-              serviceName: {{ $fullName }}-tts
+              serviceName: {{ $fullName }}-tts-engine
               servicePort: 80
               {{- end }}
           {{- end }}
