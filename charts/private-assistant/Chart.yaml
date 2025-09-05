@@ -5,10 +5,6 @@ type: application
 version: 0.5.1
 appVersion: "0.3.6"
 dependencies:
-  - name: mosquitto
-    version: 0.6.0
-    repository: https://stkr22.github.io/helm-charts
-    condition: mosquitto.enabled
   - name: redis
     version: 21.2.13
     repository: https://charts.bitnami.com/bitnami

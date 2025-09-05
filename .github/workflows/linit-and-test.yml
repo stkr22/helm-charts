@@ -42,7 +42,6 @@ jobs:
         id: adding-bitnami-dependencies
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add stkr22 https://stkr22.github.io/helm-charts
 
       - name: Run chart-testing (lint)
         run: ct lint --debug --config ./.github/configs/ct-lint.yaml --lint-conf ./.github/configs/lintconf.yaml
