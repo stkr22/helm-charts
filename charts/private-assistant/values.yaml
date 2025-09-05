@@ -189,6 +189,10 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 
+mosquitto:
+  serviceHost: ""  # Optional: Provide a custom MQTT server host
+  servicePort: ""  # Optional: Provide a custom MQTT server port
+
 
 redis:
   enabled: true

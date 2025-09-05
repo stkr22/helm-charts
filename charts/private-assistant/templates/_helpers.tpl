@@ -99,13 +99,13 @@ new password and use it.
 {{- end -}}
 
 {{- define "private-assistant.config" -}}
-mqtt_server_host: {{ if .Values.mosquitto.serviceHostOverwrite }}{{ .Values.mosquitto.serviceHostOverwrite }}{{ else }}{{ .Release.Name }}-mosquitto-service.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}{{ end }}
-mqtt_server_port: {{ if .Values.mosquitto.servicePortOverwrite }}{{ .Values.mosquitto.servicePortOverwrite }}{{ else }}{{ .Values.mosquitto.service.ports.mqtt.port }}{{ end }}
+mqtt_server_host: {{ .Values.mosquitto.serviceHost }}
+mqtt_server_port: {{ .Values.mosquitto.servicePort }}
 {{- end -}}
 
 {{- define "private-assistant.bridgeConfig" -}}
-speech_synthesis_api: {{ if .Values.bridge.ttsServiceHostOverwrite }}{{ .Values.bridge.ttsServiceHostOverwrite }}{{ else }}http://{{ .Release.Name }}-tts-engine.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}/synthesizeSpeech{{ end }}{{ end }}
-speech_synthesis_api_token: {{ if .Values.bridge.ttsServiceTokenOverwrite }}{{ .Values.bridge.ttsServiceTokenOverwrite }}{{ else }}{{ .Values.ttsEngine.config.allowedUserToken }}{{ end }}
+speech_synthesis_api: {{ .Values.mosquitto.serviceHost }}
+speech_synthesis_api_token: {{ .Values.mosquitto.servicePort }}
 {{- end -}}
 
 {{- define "private-assistant.config.base64" -}}
