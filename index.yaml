@@ -717,6 +717,21 @@ entries:
   private-assistant:
   - apiVersion: v2
     appVersion: 0.3.6
+    created: "2025-09-05T10:51:57.878932846Z"
+    dependencies:
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 21.2.13
+    description: A Helm chart for Kubernetes
+    digest: 26d9e091c4aad17704f2ca9f82c01a8ca347fcc13842394c64e392ded831d1cb
+    name: private-assistant
+    type: application
+    urls:
+    - https://github.com/stkr22/helm-charts/releases/download/private-assistant-0.5.2/private-assistant-0.5.2.tgz
+    version: 0.5.2
+  - apiVersion: v2
+    appVersion: 0.3.6
     created: "2025-07-30T15:09:26.689690524Z"
     dependencies:
     - condition: mosquitto.enabled
@@ -2036,4 +2051,4 @@ entries:
     urls:
     - https://github.com/stkr22/helm-charts/releases/download/zigbee2mqtt-0.1.0/zigbee2mqtt-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-30T15:09:26.690139907Z"
+generated: "2025-09-05T10:51:57.879587537Z"
