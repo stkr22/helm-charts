@@ -104,8 +104,8 @@ mqtt_server_port: {{ .Values.mosquitto.servicePort }}
 {{- end -}}
 
 {{- define "private-assistant.bridgeConfig" -}}
-speech_synthesis_api: {{ .Values.mosquitto.serviceHost }}
-speech_synthesis_api_token: {{ .Values.mosquitto.servicePort }}
+speech_synthesis_api: {{ if .Values.bridge.ttsServiceHostOverwrite }}{{ .Values.bridge.ttsServiceHostOverwrite }}{{ else }}http://{{ .Release.Name }}-tts-engine.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}/synthesizeSpeech{{ end }}{{ end }}
+speech_synthesis_api_token: {{ if .Values.bridge.ttsServiceTokenOverwrite }}{{ .Values.bridge.ttsServiceTokenOverwrite }}{{ else }}{{ .Values.ttsEngine.config.allowedUserToken }}{{ end }}
 {{- end -}}
 
 {{- define "private-assistant.config.base64" -}}
