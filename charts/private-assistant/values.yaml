@@ -190,15 +190,8 @@ securityContext:
     type: RuntimeDefault
 
 mosquitto:
-  enabled: true
-  nodeport:
-    enabled: true
-  service:
-    ports:
-      mqtt:
-        port: 1883  # Default MQTT port
-  serviceHostOverwrite: ""  # Optional: Provide a custom MQTT server host
-  servicePortOverwrite: ""  # Optional: Provide a custom MQTT server port
+  serviceHost: ""  # Optional: Provide a custom MQTT server host
+  servicePort: ""  # Optional: Provide a custom MQTT server port
 
 
 redis:
