@@ -6,6 +6,7 @@ metadata:
     {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.bridge.replicas }}
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app.kubernetes.io/component: bridge
@@ -34,7 +35,7 @@ spec:
         - name: {{ .Chart.Name }}-bridge
           securityContext:
             {{- toYaml .Values.bridge.securityContext | nindent 12 }}
-          image: "{{ .Values.bridge.image.repository }}"
+          image: "{{ .Values.bridge.image.repository }}:{{ .Values.bridge.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.bridge.image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_API_CONFIG_PATH
