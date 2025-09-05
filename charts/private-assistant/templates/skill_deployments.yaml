@@ -7,6 +7,7 @@ metadata:
     {{- include "private-assistant.labels" $ | nindent 4 }}
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       {{- include "private-assistant.selectorLabels" $ | nindent 6 }}
@@ -33,7 +34,7 @@ spec:
         - name: {{ .name }}
           securityContext:
             {{- toYaml $.Values.skills.securityContext | nindent 12 }}
-          image: "{{ .image.repository }}"
+          image: "{{ .image.repository }}:{{ .image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ .image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH

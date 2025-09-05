@@ -6,6 +6,7 @@ metadata:
     {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       {{- include "private-assistant.selectorLabels" . | nindent 6 }}
@@ -32,7 +33,7 @@ spec:
         - name: {{ .Chart.Name }}-intent-engine
           securityContext:
             {{- toYaml .Values.intentEngine.securityContext | nindent 12 }}
-          image: "{{ .Values.intentEngine.image.repository }}"
+          image: "{{ .Values.intentEngine.image.repository }}:{{ .Values.intentEngine.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.intentEngine.image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH

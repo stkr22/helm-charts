@@ -6,6 +6,7 @@ metadata:
     {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.ttsEngine.replicas }}
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app.kubernetes.io/component: tts-engine
@@ -34,7 +35,7 @@ spec:
         - name: {{ .Chart.Name }}-tts-engine
           securityContext:
             {{- toYaml .Values.ttsEngine.securityContext | nindent 12 }}
-          image: "{{ .Values.ttsEngine.image.repository }}"
+          image: "{{ .Values.ttsEngine.image.repository }}:{{ .Values.ttsEngine.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.ttsEngine.image.pullPolicy }}
           env:
             - name: TTS_DEFAULT_MODEL
