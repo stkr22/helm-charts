@@ -38,7 +38,12 @@ spec:
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
               value: /app/config.yaml
-            {{- toYaml .Values.globalEnv | nindent 12 }}
+            {{- with $.Values.intentEngine.globalEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with $.Values.globalEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml

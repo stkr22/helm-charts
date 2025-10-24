@@ -1,8 +1,8 @@
-{{- if .Values.bridge.ingress.enabled -}}
+{{- if .Values.groundStation.ingress.enabled -}}
 {{- $fullName := include "private-assistant.fullname" . -}}
-{{- if and .Values.bridge.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey .Values.bridge.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.bridge.ingress.annotations "kubernetes.io/ingress.class" .Values.bridge.ingress.className}}
+{{- if and .Values.groundStation.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
+  {{- if not (hasKey .Values.groundStation.ingress.annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .Values.groundStation.ingress.annotations "kubernetes.io/ingress.class" .Values.groundStation.ingress.className}}
   {{- end }}
 {{- end }}
 {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
@@ -17,17 +17,17 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "private-assistant.labels" . | nindent 4 }}
-  {{- with .Values.bridge.ingress.annotations }}
+  {{- with .Values.groundStation.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.bridge.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
-  ingressClassName: {{ .Values.bridge.ingress.className }}
+  {{- if and .Values.groundStation.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.groundStation.ingress.className }}
   {{- end }}
-  {{- if .Values.bridge.ingress.tls }}
+  {{- if .Values.groundStation.ingress.tls }}
   tls:
-    {{- range .Values.bridge.ingress.tls }}
+    {{- range .Values.groundStation.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -38,7 +38,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.bridge.ingress.hosts }}
+    {{- range .Values.groundStation.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -50,11 +50,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}-bridge
+                name: {{ $fullName }}-ground-station
                 port:
                   name: http
               {{- else }}
-              serviceName: {{ $fullName }}-bridge
+              serviceName: {{ $fullName }}-ground-station
               servicePort: 80
               {{- end }}
           {{- end }}

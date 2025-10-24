@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "private-assistant.fullname" . }}-bridge
+  name: {{ include "private-assistant.fullname" . }}-ground-station
   labels:
     {{- include "private-assistant.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.bridge.replicas }}
+  replicas: {{ .Values.groundStation.replicas }}
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app.kubernetes.io/component: bridge
+      app.kubernetes.io/component: ground-station
       {{- include "private-assistant.selectorLabels" . | nindent 6 }}
   template:
     metadata:
@@ -18,25 +18,25 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        app.kubernetes.io/component: bridge
+        app.kubernetes.io/component: ground-station
         {{- include "private-assistant.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.bridge.image.pullSecret }}
+      {{- if .Values.groundStation.image.pullSecret }}
       imagePullSecrets:
-        - name: {{ .Values.bridge.image.pullSecret }}
+        - name: {{ .Values.groundStation.image.pullSecret }}
       {{- end }}
       serviceAccountName: {{ include "private-assistant.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-bridge
+        - name: {{ .Chart.Name }}-ground-station
           securityContext:
-            {{- toYaml .Values.bridge.securityContext | nindent 12 }}
-          image: "{{ .Values.bridge.image.repository }}:{{ .Values.bridge.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.bridge.image.pullPolicy }}
+            {{- toYaml .Values.groundStation.securityContext | nindent 12 }}
+          image: "{{ .Values.groundStation.image.repository }}:{{ .Values.groundStation.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.groundStation.image.pullPolicy }}
           env:
             - name: PRIVATE_ASSISTANT_API_CONFIG_PATH
               value: /app/config.yaml
@@ -65,7 +65,7 @@ spec:
             failureThreshold: 30
             periodSeconds: 5
           resources:
-            {{- toYaml .Values.bridge.resources | nindent 12 }}
+            {{- toYaml .Values.groundStation.resources | nindent 12 }}
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml
@@ -74,4 +74,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: {{ include "private-assistant.fullname" . }}-bridge-config
+            name: {{ include "private-assistant.fullname" . }}-ground-station-config
