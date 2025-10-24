@@ -72,40 +72,14 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{/*
-Looks if there's an existing secret and reuse its password. If not it generates
-new password and use it.
-*/}}
-{{- define "private-assistant.postgres.postgres-password" -}}
-{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) "private-assistant-postgres-credentials" ) -}}
-  {{- if $secret -}}
-    {{-  index $secret "data" "postgres-password" -}}
-  {{- else -}}
-    {{- (randAlphaNum 40) | b64enc | quote -}}
-  {{- end -}}
-{{- end -}}
-
-{{/*
-Looks if there's an existing secret and reuse its password. If not it generates
-new password and use it.
-*/}}
-{{- define "private-assistant.postgres.password" -}}
-{{- $secret := (lookup "v1" "Secret" (include "private-assistant.namespace" .) "private-assistant-postgres-credentials" ) -}}
-  {{- if $secret -}}
-    {{-  index $secret "data" "password" -}}
-  {{- else -}}
-    {{- (randAlphaNum 40) | b64enc | quote -}}
-  {{- end -}}
-{{- end -}}
-
 {{- define "private-assistant.config" -}}
 mqtt_server_host: {{ .Values.mosquitto.serviceHost }}
 mqtt_server_port: {{ .Values.mosquitto.servicePort }}
 {{- end -}}
 
-{{- define "private-assistant.bridgeConfig" -}}
-speech_synthesis_api: {{ if .Values.bridge.ttsServiceHostOverwrite }}{{ .Values.bridge.ttsServiceHostOverwrite }}{{ else }}http://{{ .Release.Name }}-tts-engine.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}/synthesizeSpeech{{ end }}{{ end }}
-speech_synthesis_api_token: {{ if .Values.bridge.ttsServiceTokenOverwrite }}{{ .Values.bridge.ttsServiceTokenOverwrite }}{{ else }}{{ .Values.ttsEngine.config.allowedUserToken }}{{ end }}
+{{- define "private-assistant.groundStationConfig" -}}
+speech_synthesis_api: {{ if .Values.groundStation.ttsServiceHostOverwrite }}{{ .Values.groundStation.ttsServiceHostOverwrite }}{{ else }}http://{{ .Release.Name }}-tts-engine.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}/synthesizeSpeech{{ end }}{{ end }}
+speech_synthesis_api_token: {{ if .Values.groundStation.ttsServiceTokenOverwrite }}{{ .Values.groundStation.ttsServiceTokenOverwrite }}{{ else }}{{ .Values.ttsEngine.config.allowedUserToken }}{{ end }}
 {{- end -}}
 
 {{- define "private-assistant.config.base64" -}}

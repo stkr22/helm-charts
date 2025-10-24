@@ -46,10 +46,10 @@ ttsEngine:
     seccompProfile:
       type: RuntimeDefault
 
-bridge:
+groundStation:
   image:
-    repository: ghcr.io/stkr22/private-assistant-comms-bridge-py
-    tag: "2.0.1"
+    repository: ghcr.io/stkr22/private-assistant-ground-station-py
+    tag: "0.2.1"
     pullPolicy: IfNotPresent
     pullSecret: ""
   replicas: 1
@@ -86,6 +86,7 @@ bridge:
       type: RuntimeDefault
 
 intentEngine:
+  globalEnv: []
   image:
     repository: ghcr.io/stkr22/private-assistant-intent-engine-py
     tag: "0.4.2"
@@ -108,32 +109,7 @@ intentEngine:
   resources: {}
 
 skills:
-  globalEnv:
-    - name: POSTGRES_USER
-      valueFrom:
-        secretKeyRef:
-          name: private-assistant-postgres-app
-          key: username
-    - name: POSTGRES_DB
-      valueFrom:
-        secretKeyRef:
-          name: private-assistant-postgres-app
-          key: database
-    - name: POSTGRES_HOST
-      valueFrom:
-        secretKeyRef:
-          name: private-assistant-postgres-app
-          key: host
-    - name: POSTGRES_PORT
-      valueFrom:
-        secretKeyRef:
-          name: private-assistant-postgres-app
-          key: port
-    - name: POSTGRES_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: private-assistant-postgres-app
-          key: password
+  globalEnv: []
   securityContext:
     capabilities:
       drop:
