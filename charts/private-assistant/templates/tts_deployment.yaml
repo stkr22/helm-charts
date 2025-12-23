@@ -43,19 +43,19 @@ spec:
             - name: ALLOWED_USER_TOKEN
               value: {{ .Values.ttsEngine.config.allowedUserToken }}
             - name: REDIS_HOST
-              value: {{ .Release.Name }}-redis-master.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}
+              value: {{ .Release.Name }}-valkey.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}
             - name: REDIS_PORT
               value: "6379"
             - name: ENABLE_CACHE
               value: {{ .Values.ttsEngine.config.enableCache | default "true" | quote }}
             - name: CACHE_TTL
               value: {{ .Values.ttsEngine.config.cacheTTL | default 604800 | quote }}
-            {{- if .Values.redis.auth.enabled }}
+            {{- if .Values.valkey.auth.enabled }}
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-redis
-                  key: redis-password
+                  name: {{ .Release.Name }}-valkey-auth
+                  key: default-password
             {{- end }}
             {{- toYaml .Values.globalEnv | nindent 12 }}
           ports:

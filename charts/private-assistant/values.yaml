@@ -173,18 +173,25 @@ mosquitto:
   servicePort: ""  # Optional: Provide a custom MQTT server port
 
 
-redis:
+valkey:
   enabled: true
-  architecture: standalone
-  auth:
-    enabled: true  # Enable password authentication
-    password: "redis23password"  # Be sure to change this
 
+  # Number of replicas (1 = standalone, >1 = replicated)
+  replicas: 1
+
+  auth:
+    enabled: true
+    aclUsers:
+      default:
+        password: "redis23password"
+        permissions: "+@all ~*"  # Full access
+
+  # Persistence configuration
   persistence:
     enabled: true
     size: 1Gi
 
-  # Resources limits - adjust based on your needs
+  # Resource limits
   resources:
     requests:
       memory: 128Mi
