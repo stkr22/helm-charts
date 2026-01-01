@@ -1,16 +1,1 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "private-assistant.fullname" . }}-tts-engine
-  labels:
-    {{- include "private-assistant.labels" . | nindent 4 }}
-spec:
-  type: {{ .Values.ttsEngine.service.type }}
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/component: tts-engine
-    {{- include "private-assistant.selectorLabels" . | nindent 4 }}
+{{- include "private-assistant.service" (dict "component" "tts-engine" "serviceType" .Values.ttsEngine.service.type "context" .) }}

@@ -1,36 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  name: {{ include "private-assistant.fullname" . }}-tts-engine
-  labels:
-    {{- include "private-assistant.labels" . | nindent 4 }}
-spec:
-  replicas: {{ .Values.ttsEngine.replicas }}
-  revisionHistoryLimit: 0
-  selector:
-    matchLabels:
-      app.kubernetes.io/component: tts-engine
-      {{- include "private-assistant.selectorLabels" . | nindent 6 }}
-  template:
-    metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      labels:
-        app.kubernetes.io/component: tts-engine
-        {{- include "private-assistant.labels" . | nindent 8 }}
-	{{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-    spec:
-      {{- if .Values.ttsEngine.image.pullSecret }}
-      imagePullSecrets:
-        - name: {{ .Values.ttsEngine.image.pullSecret }}
-      {{- end }}
-      serviceAccountName: {{ include "private-assistant.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+{{ include "private-assistant.deployment.metadata" (dict "component" "tts-engine" "replicas" .Values.ttsEngine.replicas "hasComponentLabel" true "context" .) }}
+{{ include "private-assistant.deployment.podMetadata" (dict "component" "tts-engine" "imagePullSecret" .Values.ttsEngine.image.pullSecret "hasComponentLabel" true "context" .) }}
       containers:
         - name: {{ .Chart.Name }}-tts-engine
           securityContext:
@@ -62,24 +33,6 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              port: http
-              path: /health
-            initialDelaySeconds: 5
-            failureThreshold: 3
-            periodSeconds: 60
-          readinessProbe:
-            httpGet:
-              port: http
-              path: /health
-            initialDelaySeconds: 5
-            failureThreshold: 3
-            periodSeconds: 15
-          startupProbe:
-            tcpSocket:
-              port: http
-            failureThreshold: 30
-            periodSeconds: 5
+{{- include "private-assistant.deployment.httpProbes" . | nindent 10 }}
           resources:
             {{- toYaml .Values.ttsEngine.resources | nindent 12 }}
