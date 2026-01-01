@@ -1,25 +1,50 @@
+# -- Cluster domain for service DNS resolution
+# Default: "cluster.local"
+# Set this if your cluster uses a custom cluster domain
 clusterDomain: "cluster.local"
 
-
+# -- Global environment variables applied to all components
+# These variables will be injected into all containers (ground-station, tts-engine, intent-engine, skills)
 globalEnv:
   - name: TZ
     value: Europe/Berlin
 
+# -- TTS (Text-to-Speech) Engine Configuration
+# The TTS engine provides speech synthesis capabilities and uses Valkey (Redis) for caching
 ttsEngine:
+  # Container image configuration
   image:
     repository: ghcr.io/stkr22/tts-batch-api-py
     tag: "4.0.1"
     pullPolicy: IfNotPresent
+    # -- Optional: Name of image pull secret for private registries
     pullSecret: ""
+  # -- Number of TTS engine replicas
   replicas: 1
+  # TTS engine specific configuration
   config:
+    # -- TTS model to use (ONNX format)
     ttsModel: en_US-kathleen-low.onnx
+    # -- Authentication token for API access (change in production!)
     allowedUserToken: DEBUG
+    # -- Enable caching of synthesized speech
     enableCache: true
+    # -- Cache TTL in seconds (default: 7 days)
     cacheTTL: 604800
+  # -- Resource requests and limits
+  # Example:
+  # resources:
+  #   requests:
+  #     memory: "128Mi"
+  #     cpu: "100m"
+  #   limits:
+  #     memory: "256Mi"
+  #     cpu: "200m"
   resources: {}
+  # Service configuration
   service:
     type: ClusterIP
+  # Ingress configuration for external access
   ingress:
     enabled: false
     className: "traefik"
@@ -46,19 +71,29 @@ ttsEngine:
     seccompProfile:
       type: RuntimeDefault
 
+# -- Ground Station Configuration
+# The Ground Station is the REST API endpoint for the private assistant
 groundStation:
+  # Container image configuration
   image:
     repository: ghcr.io/stkr22/private-assistant-ground-station-py
     tag: "0.2.1"
     pullPolicy: IfNotPresent
+    # -- Optional: Name of image pull secret for private registries
     pullSecret: ""
+  # -- Number of ground station replicas
   replicas: 1
+  # -- Ground station specific configuration (YAML format)
+  # This configuration is mounted as /app/config.yaml in the container
   config: |
     speech_transcription_api: "http://127.0.0.1:8080/transcribe"
     speech_transcription_api_token: "DEBUG"
+  # -- Resource requests and limits
   resources: {}
+  # Service configuration
   service:
     type: ClusterIP
+  # Ingress configuration for external access
   ingress:
     enable: true
     className: "traefik"
@@ -85,15 +120,24 @@ groundStation:
     seccompProfile:
       type: RuntimeDefault
 
+# -- Intent Engine Configuration
+# The Intent Engine is the core processing component that handles intent recognition
 intentEngine:
+  # -- Additional environment variables specific to intent engine
+  # These are merged with globalEnv
   globalEnv: []
+  # Container image configuration
   image:
     repository: ghcr.io/stkr22/private-assistant-intent-engine-py
     tag: "0.4.2"
     pullPolicy: IfNotPresent
+    # -- Optional: Name of image pull secret for private registries
     pullSecret: ""
+  # -- Intent engine specific configuration (YAML format)
+  # This configuration is mounted as /app/config.yaml in the container
   config: |
     client_id: "intent_engine"
+  # Container-level security context
   securityContext:
     capabilities:
       drop:
@@ -108,8 +152,13 @@ intentEngine:
       type: RuntimeDefault
   resources: {}
 
+# -- Skills Configuration
+# Skills are extensible components that add specific capabilities to the private assistant
+# Each skill is deployed as a separate deployment with its own configuration
 skills:
+  # -- Global environment variables for all skills
   globalEnv: []
+  # -- Default security context for all skills
   securityContext:
     capabilities:
       drop:
@@ -122,39 +171,54 @@ skills:
     privileged: false
     seccompProfile:
       type: RuntimeDefault
+  # -- List of active skills to deploy
+  # Each skill creates its own deployment, configmap, and optionally mounts secrets
+  # Example:
   activeSkills: []
-    # - name: "curtain-skill"
-    #   config:
+    # - name: "curtain-skill"                     # Skill name (used for resource naming)
+    #   config:                                    # Skill configuration (mounted as YAML)
     #     client_id: "curtain_skill"
     #   image:
-    #     repository: "ghcr.io/stkr22/private-assistant-curtain-skill-py:0.1.4"
+    #     repository: "ghcr.io/stkr22/private-assistant-curtain-skill-py"
+    #     tag: "0.1.4"
     #     pullPolicy: IfNotPresent
-    #   configSecretName: MySecret
-    #   resources: {}
+    #   configSecretName: MySecret                # Optional: K8s secret to mount
+    #   resources: {}                             # Optional: Resource requests/limits
+    #   env: []                                   # Optional: Additional environment variables
 
+# -- Override the chart name used for resource naming
 nameOverride: ""
+# -- Override the full name used for resource naming
 fullnameOverride: ""
 
+# -- Service Account Configuration
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
+  # -- Automatically mount a ServiceAccount's API credentials?
   automount: true
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
+  # -- The name of the service account to use
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# -- Annotations to add to all pods
 podAnnotations: {}
+
+# -- Labels to add to all pods
 podLabels: {}
 
+# -- Pod-level security context applied to all pods
+# This sets the fsGroup for volume ownership
 podSecurityContext:
   fsGroup: 1001
   fsGroupChangePolicy: OnRootMismatch
   supplementalGroups:
     - 1001
 
+# -- Default container-level security context
+# This is applied to most containers (overridden per component as needed)
 securityContext:
   capabilities:
     drop:
@@ -168,30 +232,47 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 
+# -- Mosquitto (MQTT) Configuration
+# The private assistant uses MQTT for inter-service communication
 mosquitto:
-  serviceHost: ""  # Optional: Provide a custom MQTT server host
-  servicePort: ""  # Optional: Provide a custom MQTT server port
+  # -- Optional: Provide a custom MQTT server host
+  # If empty, uses default service discovery
+  serviceHost: ""
+  # -- Optional: Provide a custom MQTT server port
+  # If empty, uses default port
+  servicePort: ""
 
-
+# -- Valkey (Redis-compatible) Configuration
+# Valkey is used as a caching layer for the TTS engine
 valkey:
+  # -- Enable Valkey deployment
+  # Set to false to use an external Redis/Valkey instance
   enabled: true
 
-  # Number of replicas (1 = standalone, >1 = replicated)
+  # -- Number of Valkey replicas
+  # 1 = standalone mode, >1 = replicated mode
   replicas: 1
 
+  # Authentication configuration
   auth:
+    # -- Enable authentication
     enabled: true
+    # ACL users configuration
     aclUsers:
       default:
+        # -- Default user password (change in production!)
         password: "redis23password"
-        permissions: "+@all ~*"  # Full access
+        # -- User permissions (full access)
+        permissions: "+@all ~*"
 
   # Persistence configuration
   persistence:
+    # -- Enable persistent storage
     enabled: true
+    # -- Storage size for Valkey data
     size: 1Gi
 
-  # Resource limits
+  # Resource limits for Valkey
   resources:
     requests:
       memory: 128Mi

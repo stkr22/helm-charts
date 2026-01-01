@@ -1,7 +1,45 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-      "config:best-practices"
-    ],
-  "schedule": ["* 16-19 15 * *"]
-  }
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices"
+  ],
+  "schedule": ["* 16-19 15 * *"],
+  "packageRules": [
+    {
+      "description": "Group all container image updates in private-assistant chart",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["charts/private-assistant/values.yaml"],
+      "groupName": "private-assistant-images",
+      "automerge": false
+    },
+    {
+      "description": "Group Helm chart dependencies",
+      "matchDatasources": ["helm"],
+      "matchFileNames": ["charts/private-assistant/Chart.yaml"],
+      "groupName": "private-assistant-helm-dependencies",
+      "automerge": false
+    },
+    {
+      "description": "Separate major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ],
+  "helm-values": {
+    "fileMatch": ["charts/.+/values\\.yaml$"]
+  },
+  "kubernetes": {
+    "fileMatch": ["charts/.+/templates/.+\\.yaml$"]
+  },
+  "regexManagers": [
+    {
+      "description": "Update container images in values.yaml",
+      "fileMatch": ["^charts/private-assistant/values\\.yaml$"],
+      "matchStrings": [
+        "repository:\\s*(?<depName>.*?)\\n\\s*tag:\\s*[\"']?(?<currentValue>.*?)[\"']?"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ]
+}
