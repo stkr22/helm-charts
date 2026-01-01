@@ -30,20 +30,41 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4.3.1 # v4.3.1
 
-      - name: Install chart-testing
-        uses: helm/chart-testing-action@v2.7.0
-
       - name: Detect changed charts
         id: changed
         run: |
-          changed=$(ct list-changed --target-branch main --chart-dirs charts)
-          if [[ -n "$changed" ]]; then
+          # Find charts that have changed in this push or don't have a release yet
+          changed_charts=()
+
+          for chart_dir in charts/*/; do
+            chart=$(basename "$chart_dir")
+            chart_file="${chart_dir}Chart.yaml"
+
+            if [[ ! -f "$chart_file" ]]; then
+              continue
+            fi
+
+            # Extract version from Chart.yaml
+            version=$(grep '^version:' "$chart_file" | awk '{print $2}' | tr -d '[:space:]')
+            tag="${chart}-${version}"
+
+            # Check if this version tag already exists
+            if git rev-parse "$tag" >/dev/null 2>&1; then
+              echo "Release $tag already exists, skipping..."
+            else
+              echo "New version detected: $tag"
+              changed_charts+=("$chart_dir")
+            fi
+          done
+
+          if [[ ${#changed_charts[@]} -gt 0 ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "charts<<EOF" >> $GITHUB_OUTPUT
-            echo "$changed" >> $GITHUB_OUTPUT
+            printf '%s\n' "${changed_charts[@]}" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No new chart versions to release"
           fi
 
       - name: Package changed charts
