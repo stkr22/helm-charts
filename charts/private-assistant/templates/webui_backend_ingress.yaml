@@ -1,0 +1,3 @@
+{{- if and .Values.webUiBackend.enabled .Values.webUiBackend.ingress.enabled -}}
+{{- include "private-assistant.ingress" (dict "component" "webui-backend" "serviceName" "webui-backend" "nameSuffix" "" "config" .Values.webUiBackend.ingress "context" .) }}
+{{- end }}

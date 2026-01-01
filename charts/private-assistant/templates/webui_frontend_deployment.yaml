@@ -1,0 +1,58 @@
+{{- if .Values.webUiFrontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+{{ include "private-assistant.deployment.metadata" (dict "component" "webui-frontend" "replicas" .Values.webUiFrontend.replicas "hasComponentLabel" true "context" .) }}
+{{ include "private-assistant.deployment.podMetadata" (dict "component" "webui-frontend" "imagePullSecret" .Values.webUiFrontend.image.pullSecret "hasComponentLabel" true "context" .) }}
+      containers:
+        - name: webui-frontend
+          image: "{{ .Values.webUiFrontend.image.repository }}:{{ .Values.webUiFrontend.image.tag }}"
+          imagePullPolicy: {{ .Values.webUiFrontend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /health
+            initialDelaySeconds: 5
+            failureThreshold: 3
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /health
+            initialDelaySeconds: 5
+            failureThreshold: 3
+            periodSeconds: 15
+          startupProbe:
+            httpGet:
+              port: http
+              path: /health
+            failureThreshold: 30
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.webUiFrontend.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.webUiFrontend.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ include "private-assistant.fullname" . }}-webui-frontend-nginx
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+{{- end }}

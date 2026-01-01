@@ -247,3 +247,158 @@ startupProbe:
   failureThreshold: 30
   periodSeconds: 5
 {{- end -}}
+
+{{/*
+Get Mosquitto/MQTT broker host
+*/}}
+{{- define "private-assistant.mosquitto.host" -}}
+{{- if .Values.mosquitto.serviceHost -}}
+{{ .Values.mosquitto.serviceHost }}
+{{- else -}}
+{{ .Release.Name }}-mosquitto.{{ include "private-assistant.namespace" . }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get Mosquitto/MQTT broker port
+*/}}
+{{- define "private-assistant.mosquitto.port" -}}
+{{- if .Values.mosquitto.servicePort -}}
+{{ .Values.mosquitto.servicePort }}
+{{- else -}}
+1883
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate backend service URL for frontend proxy
+*/}}
+{{- define "private-assistant.webui.backendUrl" -}}
+http://{{ include "private-assistant.fullname" . }}-webui-backend.{{ include "private-assistant.namespace" . }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}:8080
+{{- end -}}
+
+{{/*
+Generate PostgreSQL environment variables
+Usage: include "private-assistant.postgres.env" (dict "component" "webUiBackend" "componentConfig" .Values.webUiBackend.config.postgres "context" .)
+Parameters:
+  - component: Component name (for debugging/comments)
+  - componentConfig: Component-specific postgres config (optional)
+  - context: The root context (.)
+This helper checks:
+  1. If component has specific postgres config, use it
+  2. Otherwise, use global postgres config
+  3. Support both existingSecret and direct values
+*/}}
+{{- define "private-assistant.postgres.env" -}}
+{{- $component := .component -}}
+{{- $context := .context -}}
+{{- $componentConfig := .componentConfig -}}
+{{- $useGlobal := true -}}
+{{- if $componentConfig -}}
+  {{- if or $componentConfig.server $componentConfig.host -}}
+    {{- $useGlobal = false -}}
+  {{- end -}}
+{{- end -}}
+{{- if $useGlobal -}}
+  {{- if $context.Values.postgres.existingSecret.enabled -}}
+# PostgreSQL from global existingSecret ({{ $context.Values.postgres.existingSecret.name }})
+- name: POSTGRES_USER
+  valueFrom:
+    secretKeyRef:
+      name: {{ $context.Values.postgres.existingSecret.name }}
+      key: {{ $context.Values.postgres.existingSecret.keys.username }}
+- name: POSTGRES_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ $context.Values.postgres.existingSecret.name }}
+      key: {{ $context.Values.postgres.existingSecret.keys.password }}
+- name: POSTGRES_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ $context.Values.postgres.existingSecret.name }}
+      key: {{ $context.Values.postgres.existingSecret.keys.host }}
+- name: POSTGRES_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ $context.Values.postgres.existingSecret.name }}
+      key: {{ $context.Values.postgres.existingSecret.keys.port }}
+- name: POSTGRES_DB
+  valueFrom:
+    secretKeyRef:
+      name: {{ $context.Values.postgres.existingSecret.name }}
+      key: {{ $context.Values.postgres.existingSecret.keys.dbname }}
+  {{- else -}}
+# PostgreSQL from global direct values
+- name: POSTGRES_HOST
+  value: {{ $context.Values.postgres.server | quote }}
+- name: POSTGRES_PORT
+  value: {{ $context.Values.postgres.port | quote }}
+- name: POSTGRES_DB
+  value: {{ $context.Values.postgres.db | quote }}
+- name: POSTGRES_USER
+  value: {{ $context.Values.postgres.user | quote }}
+- name: POSTGRES_PASSWORD
+  value: {{ $context.Values.postgres.password | quote }}
+  {{- end -}}
+{{- else -}}
+# PostgreSQL from component-specific config
+- name: POSTGRES_HOST
+  value: {{ $componentConfig.server | default $componentConfig.host | quote }}
+- name: POSTGRES_PORT
+  value: {{ $componentConfig.port | quote }}
+- name: POSTGRES_DB
+  value: {{ $componentConfig.db | default $componentConfig.database | quote }}
+- name: POSTGRES_USER
+  value: {{ $componentConfig.user | quote }}
+- name: POSTGRES_PASSWORD
+  value: {{ $componentConfig.password | quote }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+MQTT environment variables helper
+Usage: include "private-assistant.mqtt.env" (dict "component" "webUiBackend" "componentConfig" .Values.webUiBackend.config.mqtt "context" .)
+Parameters:
+  - component: Component name for logging/debugging
+  - componentConfig: Component-specific MQTT config (optional, nil to use global)
+  - context: Root context ($)
+*/}}
+{{- define "private-assistant.mqtt.env" -}}
+{{- $context := .context -}}
+{{- $componentConfig := .componentConfig -}}
+{{- $useGlobal := true -}}
+{{- if $componentConfig -}}
+  {{- if or $componentConfig.username $componentConfig.host -}}
+    {{- $useGlobal = false -}}
+  {{- end -}}
+{{- end -}}
+{{- if $useGlobal -}}
+# MQTT from global mosquitto values
+- name: MQTT_HOST
+  value: {{ include "private-assistant.mosquitto.host" $context | quote }}
+- name: MQTT_PORT
+  value: {{ include "private-assistant.mosquitto.port" $context | quote }}
+{{- if $context.Values.mosquitto.username }}
+- name: MQTT_USERNAME
+  value: {{ $context.Values.mosquitto.username | quote }}
+{{- end }}
+{{- if $context.Values.mosquitto.password }}
+- name: MQTT_PASSWORD
+  value: {{ $context.Values.mosquitto.password | quote }}
+{{- end }}
+{{- else -}}
+# MQTT from component-specific config
+- name: MQTT_HOST
+  value: {{ $componentConfig.host | quote }}
+- name: MQTT_PORT
+  value: {{ $componentConfig.port | quote }}
+{{- if $componentConfig.username }}
+- name: MQTT_USERNAME
+  value: {{ $componentConfig.username | quote }}
+{{- end }}
+{{- if $componentConfig.password }}
+- name: MQTT_PASSWORD
+  value: {{ $componentConfig.password | quote }}
+{{- end }}
+{{- end -}}
+{{- end -}}

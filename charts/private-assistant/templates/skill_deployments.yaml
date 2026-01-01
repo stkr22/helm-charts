@@ -39,6 +39,8 @@ spec:
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
               value: /config/
+            {{- include "private-assistant.postgres.env" (dict "component" .name "componentConfig" nil "context" $) | nindent 12 }}
+            {{- include "private-assistant.mqtt.env" (dict "component" .name "componentConfig" nil "context" $) | nindent 12 }}
             {{- with .env }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

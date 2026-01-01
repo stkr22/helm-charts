@@ -1,8 +1,8 @@
 apiVersion: v2
 name: private-assistant
-description: A Helm chart for Kubernetes
+description: A Helm chart for Private Assistant ecosystem with optional Web UI
 type: application
-version: 0.8.1
+version: 0.9.0
 appVersion: "0.3.6"
 dependencies:
   - name: valkey
