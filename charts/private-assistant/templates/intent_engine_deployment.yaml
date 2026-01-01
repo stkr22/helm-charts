@@ -11,6 +11,8 @@ kind: Deployment
           env:
             - name: PRIVATE_ASSISTANT_CONFIG_PATH
               value: /app/config.yaml
+            {{- include "private-assistant.postgres.env" (dict "component" "intentEngine" "componentConfig" nil "context" .) | nindent 12 }}
+            {{- include "private-assistant.mqtt.env" (dict "component" "intentEngine" "componentConfig" nil "context" .) | nindent 12 }}
             {{- with $.Values.intentEngine.globalEnv }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

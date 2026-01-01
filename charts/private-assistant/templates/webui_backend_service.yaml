@@ -1,0 +1,3 @@
+{{- if .Values.webUiBackend.enabled }}
+{{- include "private-assistant.service" (dict "component" "webui-backend" "serviceType" .Values.webUiBackend.service.type "context" .) }}
+{{- end }}

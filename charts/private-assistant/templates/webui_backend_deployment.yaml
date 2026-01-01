@@ -1,0 +1,75 @@
+{{- if .Values.webUiBackend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+{{ include "private-assistant.deployment.metadata" (dict "component" "webui-backend" "replicas" .Values.webUiBackend.replicas "hasComponentLabel" true "context" .) }}
+{{ include "private-assistant.deployment.podMetadata" (dict "component" "webui-backend" "imagePullSecret" .Values.webUiBackend.image.pullSecret "hasComponentLabel" true "context" .) }}
+      containers:
+        - name: webui-backend
+          image: "{{ .Values.webUiBackend.image.repository }}:{{ .Values.webUiBackend.image.tag }}"
+          imagePullPolicy: {{ .Values.webUiBackend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            {{- include "private-assistant.postgres.env" (dict "component" "webUiBackend" "componentConfig" .Values.webUiBackend.config.postgres "context" .) | nindent 12 }}
+            {{- include "private-assistant.mqtt.env" (dict "component" "webUiBackend" "componentConfig" .Values.webUiBackend.config.mqtt "context" .) | nindent 12 }}
+
+            # MinIO Configuration
+            - name: MINIO_ENDPOINT
+              value: {{ .Values.webUiBackend.config.minio.endpoint | quote }}
+            - name: MINIO_BUCKET_NAME
+              value: {{ .Values.webUiBackend.config.minio.bucketName | quote }}
+            - name: MINIO_SECURE
+              value: {{ .Values.webUiBackend.config.minio.secure | quote }}
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.webUiBackend.existingSecret }}{{ .Values.webUiBackend.existingSecret }}{{ else }}{{ include "private-assistant.fullname" . }}-webui-backend{{ end }}
+                  key: minio-access-key
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.webUiBackend.existingSecret }}{{ .Values.webUiBackend.existingSecret }}{{ else }}{{ include "private-assistant.fullname" . }}-webui-backend{{ end }}
+                  key: minio-secret-key
+
+            # Application Configuration
+            - name: ENVIRONMENT
+              value: {{ .Values.webUiBackend.config.app.environment | quote }}
+            - name: PROJECT_NAME
+              value: {{ .Values.webUiBackend.config.app.projectName | quote }}
+            - name: BACKEND_CORS_ORIGINS
+              value: {{ .Values.webUiBackend.config.app.backendCorsOrigins | quote }}
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.webUiBackend.existingSecret }}{{ .Values.webUiBackend.existingSecret }}{{ else }}{{ include "private-assistant.fullname" . }}-webui-backend{{ end }}
+                  key: secret-key
+            - name: FIRST_SUPERUSER
+              value: {{ .Values.webUiBackend.config.app.firstSuperuser | quote }}
+            - name: FIRST_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.webUiBackend.existingSecret }}{{ .Values.webUiBackend.existingSecret }}{{ else }}{{ include "private-assistant.fullname" . }}-webui-backend{{ end }}
+                  key: first-superuser-password
+            - name: FRONTEND_HOST
+              value: {{ .Values.webUiBackend.config.app.frontendHost | quote }}
+            - name: DISABLE_OAUTH
+              value: {{ .Values.webUiBackend.config.app.disableOauth | quote }}
+            {{- if .Values.webUiBackend.config.app.oauthIssuer }}
+            - name: OAUTH_ISSUER
+              value: {{ .Values.webUiBackend.config.app.oauthIssuer | quote }}
+            {{- end }}
+            {{- if .Values.webUiBackend.config.app.oauthClientId }}
+            - name: OAUTH_CLIENT_ID
+              value: {{ .Values.webUiBackend.config.app.oauthClientId | quote }}
+            {{- end }}
+            {{- with .Values.globalEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- include "private-assistant.deployment.httpProbes" . | nindent 10 }}
+          resources:
+            {{- toYaml .Values.webUiBackend.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.webUiBackend.securityContext | nindent 12 }}
+{{- end }}
