@@ -7,5 +7,4 @@ metadata:
     {{- include "private-assistant.labels" . | nindent 4 }}
 data:
   config.yaml: |
-    {{ include "private-assistant.config" . | nindent 4 }}
     {{- .Values.intentEngine.config | nindent 4 }}

@@ -72,18 +72,9 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "private-assistant.config" -}}
-mqtt_server_host: {{ .Values.mosquitto.serviceHost }}
-mqtt_server_port: {{ .Values.mosquitto.servicePort }}
-{{- end -}}
-
 {{- define "private-assistant.groundStationConfig" -}}
 speech_synthesis_api: {{ if .Values.groundStation.ttsServiceHostOverwrite }}{{ .Values.groundStation.ttsServiceHostOverwrite }}{{ else }}http://{{ .Release.Name }}-tts-engine.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}/synthesizeSpeech{{ end }}{{ end }}
 speech_synthesis_api_token: {{ if .Values.groundStation.ttsServiceTokenOverwrite }}{{ .Values.groundStation.ttsServiceTokenOverwrite }}{{ else }}{{ .Values.ttsEngine.config.allowedUserToken }}{{ end }}
-{{- end -}}
-
-{{- define "private-assistant.config.base64" -}}
-{{ include "private-assistant.config" . | b64enc }}
 {{- end -}}
 
 {{/*
