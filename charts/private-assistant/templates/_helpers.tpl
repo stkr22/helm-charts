@@ -393,3 +393,131 @@ Parameters:
 {{- end }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Derive frontend URL from ingress configuration
+Returns: https://app.example.com or http://app.example.com
+*/}}
+{{- define "private-assistant.webui.frontendUrl" -}}
+{{- $ingress := .Values.webUi.frontend.ingress -}}
+{{- if and $ingress.enabled $ingress.hosts -}}
+  {{- $firstHost := index $ingress.hosts 0 -}}
+  {{- $protocol := "http" -}}
+  {{- if $ingress.tls -}}
+    {{- range $ingress.tls -}}
+      {{- if has $firstHost.host .hosts -}}
+        {{- $protocol = "https" -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- printf "%s://%s" $protocol $firstHost.host -}}
+{{- else -}}
+  http://private-assistant.local
+{{- end -}}
+{{- end -}}
+
+{{/*
+Derive backend API URL for frontend (VITE_API_URL)
+Priority: backend ingress > frontend ingress + /api > internal service
+*/}}
+{{- define "private-assistant.webui.backendApiUrl" -}}
+{{- $backendIngress := .Values.webUi.backend.ingress -}}
+{{- $frontendIngress := .Values.webUi.frontend.ingress -}}
+{{- if and $backendIngress.enabled $backendIngress.hosts -}}
+  {{- $firstHost := index $backendIngress.hosts 0 -}}
+  {{- $firstPath := index $firstHost.paths 0 -}}
+  {{- $protocol := "http" -}}
+  {{- if $backendIngress.tls -}}
+    {{- range $backendIngress.tls -}}
+      {{- if has $firstHost.host .hosts -}}
+        {{- $protocol = "https" -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- printf "%s://%s%s/v1" $protocol $firstHost.host $firstPath.path -}}
+{{- else if and $frontendIngress.enabled $frontendIngress.hosts -}}
+  {{- $firstHost := index $frontendIngress.hosts 0 -}}
+  {{- $protocol := "http" -}}
+  {{- if $frontendIngress.tls -}}
+    {{- range $frontendIngress.tls -}}
+      {{- if has $firstHost.host .hosts -}}
+        {{- $protocol = "https" -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- printf "%s://%s/api/v1" $protocol $firstHost.host -}}
+{{- else -}}
+  {{- include "private-assistant.webui.backendUrl" . -}}/v1
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate CORS origins from frontend ingress hosts
+Returns: comma-separated list like "https://app.example.com,http://dev.example.com"
+*/}}
+{{- define "private-assistant.webui.corsOrigins" -}}
+{{- $ingress := .Values.webUi.frontend.ingress -}}
+{{- $origins := list -}}
+{{- if and $ingress.enabled $ingress.hosts -}}
+  {{- range $ingress.hosts -}}
+    {{- $protocol := "http" -}}
+    {{- if $ingress.tls -}}
+      {{- range $ingress.tls -}}
+        {{- if has $.host .hosts -}}
+          {{- $protocol = "https" -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $origins = append $origins (printf "%s://%s" $protocol .host) -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $origins -}}
+  http://localhost:3000,http://localhost:5173
+{{- else -}}
+  {{- join "," $origins -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Auto-generate first superuser email from ingress host
+Returns: admin@{frontend-host} or provided value
+*/}}
+{{- define "private-assistant.webui.firstSuperuser" -}}
+{{- if .Values.webUi.backend.firstSuperuser -}}
+  {{- .Values.webUi.backend.firstSuperuser -}}
+{{- else -}}
+  {{- $ingress := .Values.webUi.frontend.ingress -}}
+  {{- if and $ingress.enabled $ingress.hosts -}}
+    {{- $firstHost := index $ingress.hosts 0 -}}
+    {{- printf "admin@%s" $firstHost.host -}}
+  {{- else -}}
+    admin@private-assistant.local
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate or lookup secret key for Web UI backend
+*/}}
+{{- define "private-assistant.webui.secretKey" -}}
+{{- $secretName := printf "%s-webui-backend" (include "private-assistant.fullname" .) -}}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
+{{- if $existingSecret -}}
+  {{- index $existingSecret.data "secret-key" | b64dec -}}
+{{- else -}}
+  {{- randAlphaNum 32 -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate or lookup first superuser password
+*/}}
+{{- define "private-assistant.webui.firstSuperuserPassword" -}}
+{{- $secretName := printf "%s-webui-backend" (include "private-assistant.fullname" .) -}}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
+{{- if $existingSecret -}}
+  {{- index $existingSecret.data "first-superuser-password" | b64dec -}}
+{{- else -}}
+  {{- randAlphaNum 40 -}}
+{{- end -}}
+{{- end -}}

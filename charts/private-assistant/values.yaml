@@ -33,7 +33,8 @@ postgres:
   port: 5432
   db: "private_assistant"
   user: "postgres"
-  password: "changethis"
+  # -- PostgreSQL password (leave empty, provide via existingSecret or external DB)
+  password: ""
 
 # -- TTS (Text-to-Speech) Engine Configuration
 # The TTS engine provides speech synthesis capabilities and uses Valkey (Redis) for caching
@@ -269,8 +270,8 @@ mosquitto:
   servicePort: ""
   # -- MQTT username for authentication (optional)
   username: ""
-  # -- MQTT password for authentication (optional)
-  password: "changethis"
+  # -- MQTT password (leave empty for external broker or if not used)
+  password: ""
 
 # -- Valkey (Redis-compatible) Configuration
 # Valkey is used as a caching layer for the TTS engine
@@ -311,142 +312,119 @@ valkey:
       memory: 256Mi
       cpu: 200m
 
-# -- Web UI Backend Configuration
-# FastAPI backend providing REST API for the web interface
-webUiBackend:
-  # -- Enable/disable the Web UI Backend deployment
+# -- Web UI Configuration
+# Provides a web-based interface for managing the Private Assistant
+webUi:
+  # -- Enable Web UI (both frontend and backend)
   enabled: false
 
-  # Container image configuration
-  image:
-    repository: ghcr.io/stkr22/private-assistant-web-ui-backend
-    tag: "latest"
-    pullPolicy: IfNotPresent
-    pullSecret: ""
-
-  # -- Number of backend replicas
-  replicas: 1
-
-  # -- Resource requests and limits
-  resources: {}
-
-  # Service configuration
-  service:
-    type: ClusterIP
-    port: 8080
-
-  # Ingress configuration for API access
-  ingress:
+  # -- OAuth/OIDC Configuration (shared between frontend and backend)
+  oauth:
+    # -- Enable OAuth authentication
     enabled: false
-    className: "traefik"
-    annotations: {}
-    hosts:
-      - host: api.private-assistant.local
-        paths:
-          - path: /api
-            pathType: Prefix
-    tls: []
+    # -- OAuth authority/issuer URL (e.g., "https://auth.example.com")
+    authority: ""
+    # -- OAuth client ID
+    clientId: ""
+    # -- OAuth redirect URI (optional, auto-derived from frontend ingress if empty)
+    redirectUri: ""
+    # -- OAuth scopes (space-separated)
+    scope: "openid profile email"
 
-  # Security context (follows TTS engine pattern - user 1001:1001)
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    runAsUser: 1001
-    runAsGroup: 1001
-    runAsNonRoot: true
-    readOnlyRootFilesystem: false  # FastAPI needs /tmp for uploads, sessions
-    allowPrivilegeEscalation: false
-    privileged: false
-    seccompProfile:
-      type: RuntimeDefault
+  # -- MinIO/S3 Configuration for file storage
+  minio:
+    endpoint: "minio.default.svc.cluster.local:9000"
+    bucketName: "private-assistant"
+    secure: false
+    # Access key and secret key removed - use existingSecret or defaults
 
-  # Backend configuration
-  config:
-    # PostgreSQL configuration (optional - uses global postgres config if not specified)
-    # Leave empty to use global postgres configuration defined at the top level
-    postgres: {}
+  # -- Secrets management
+  existingSecret: ""  # Use existing secret instead of creating one
 
-    # MinIO/S3 configuration (external)
-    minio:
-      endpoint: "minio.default.svc.cluster.local:9000"
-      bucketName: "private-assistant"
-      secure: false
-      # Access key and secret key should be set via existingSecret or will use defaults
+  # -- Frontend Configuration (React + Nginx)
+  frontend:
+    image:
+      repository: ghcr.io/stkr22/private-assistant-web-ui-frontend
+      tag: "latest"
+      pullPolicy: IfNotPresent
+      pullSecret: ""
+    replicas: 1
+    resources: {}
 
-    # MQTT configuration (optional - uses global mosquitto config if not specified)
-    # Leave empty to use global mosquitto configuration defined at the top level
-    mqtt: {}
+    service:
+      type: ClusterIP
+      port: 80
+
+    ingress:
+      enabled: false
+      className: "traefik"
+      annotations: {}
+      hosts:
+        - host: private-assistant.local
+          paths:
+            - path: /
+              pathType: Prefix
+      tls: []
+
+    securityContext:
+      capabilities:
+        drop:
+          - ALL
+      runAsUser: 101
+      runAsGroup: 101
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      privileged: false
+      seccompProfile:
+        type: RuntimeDefault
+
+    # -- Additional environment variables for frontend
+    env: []
+
+  # -- Backend Configuration (FastAPI)
+  backend:
+    image:
+      repository: ghcr.io/stkr22/private-assistant-web-ui-backend
+      tag: "latest"
+      pullPolicy: IfNotPresent
+      pullSecret: ""
+    replicas: 1
+    resources: {}
+
+    service:
+      type: ClusterIP
+      port: 8080
+
+    ingress:
+      enabled: false
+      className: "traefik"
+      annotations: {}
+      hosts:
+        - host: api.private-assistant.local
+          paths:
+            - path: /api
+              pathType: Prefix
+      tls: []
+
+    securityContext:
+      capabilities:
+        drop:
+          - ALL
+      runAsUser: 1001
+      runAsGroup: 1001
+      runAsNonRoot: true
+      readOnlyRootFilesystem: false
+      allowPrivilegeEscalation: false
+      privileged: false
+      seccompProfile:
+        type: RuntimeDefault
 
     # Application configuration
-    app:
-      environment: "production"
-      projectName: "Private Assistant"
-      backendCorsOrigins: "http://localhost:3000,http://localhost:5173"
-      firstSuperuser: "admin@example.com"
-      disableOauth: true
-      frontendHost: "http://private-assistant.local"
-      oauthIssuer: ""
-      oauthClientId: ""
-      # secretKey should be set via existingSecret or will use default
-      # firstSuperuserPassword should be set via existingSecret or will use default
+    environment: "production"
+    projectName: "Private Assistant"
+    # firstSuperuser - optional, auto-generated from ingress if empty
+    firstSuperuser: ""
 
-  # -- Existing secret name containing sensitive values
-  # Expected keys:
-  #   - postgres-password
-  #   - minio-access-key
-  #   - minio-secret-key
-  #   - secret-key
-  #   - first-superuser-password
-  #   - mqtt-password
-  existingSecret: ""
-
-# -- Web UI Frontend Configuration
-# React application served by Nginx
-webUiFrontend:
-  # -- Enable/disable the Web UI Frontend deployment
-  enabled: false
-
-  # Container image configuration
-  image:
-    repository: ghcr.io/stkr22/private-assistant-web-ui-frontend
-    tag: "latest"
-    pullPolicy: IfNotPresent
-    pullSecret: ""
-
-  # -- Number of frontend replicas
-  replicas: 1
-
-  # -- Resource requests and limits
-  resources: {}
-
-  # Service configuration
-  service:
-    type: ClusterIP
-    port: 80
-
-  # Ingress configuration for web access
-  ingress:
-    enabled: false
-    className: "traefik"
-    annotations: {}
-    hosts:
-      - host: private-assistant.local
-        paths:
-          - path: /
-            pathType: Prefix
-    tls: []
-
-  # Security context for Nginx
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    runAsUser: 101  # Nginx default user
-    runAsGroup: 101
-    runAsNonRoot: true
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    privileged: false
-    seccompProfile:
-      type: RuntimeDefault
+    # -- Additional environment variables for backend
+    env: []
