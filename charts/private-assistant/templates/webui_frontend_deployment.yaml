@@ -1,16 +1,46 @@
-{{- if .Values.webUiFrontend.enabled }}
+{{- if .Values.webUi.enabled }}
 apiVersion: apps/v1
 kind: Deployment
-{{ include "private-assistant.deployment.metadata" (dict "component" "webui-frontend" "replicas" .Values.webUiFrontend.replicas "hasComponentLabel" true "context" .) }}
-{{ include "private-assistant.deployment.podMetadata" (dict "component" "webui-frontend" "imagePullSecret" .Values.webUiFrontend.image.pullSecret "hasComponentLabel" true "context" .) }}
+{{ include "private-assistant.deployment.metadata" (dict "component" "webui-frontend" "replicas" .Values.webUi.frontend.replicas "hasComponentLabel" true "context" .) }}
+{{ include "private-assistant.deployment.podMetadata" (dict "component" "webui-frontend" "imagePullSecret" .Values.webUi.frontend.image.pullSecret "hasComponentLabel" true "context" .) }}
       containers:
         - name: webui-frontend
-          image: "{{ .Values.webUiFrontend.image.repository }}:{{ .Values.webUiFrontend.image.tag }}"
-          imagePullPolicy: {{ .Values.webUiFrontend.image.pullPolicy }}
+          image: "{{ .Values.webUi.frontend.image.repository }}:{{ .Values.webUi.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.webUi.frontend.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
+          env:
+            # Required: Backend API URL (auto-derived from ingress)
+            - name: VITE_API_URL
+              value: {{ include "private-assistant.webui.backendApiUrl" . | quote }}
+
+            # OAuth configuration
+            {{- if .Values.webUi.oauth.enabled }}
+            - name: VITE_OAUTH_AUTHORITY
+              value: {{ .Values.webUi.oauth.authority | quote }}
+            - name: VITE_OAUTH_CLIENT_ID
+              value: {{ .Values.webUi.oauth.clientId | quote }}
+            {{- if .Values.webUi.oauth.redirectUri }}
+            - name: VITE_OAUTH_REDIRECT_URI
+              value: {{ .Values.webUi.oauth.redirectUri | quote }}
+            {{- end }}
+            {{- if .Values.webUi.oauth.scope }}
+            - name: VITE_OAUTH_SCOPE
+              value: {{ .Values.webUi.oauth.scope | quote }}
+            {{- end }}
+            {{- end }}
+
+            # Component-specific environment overrides
+            {{- with .Values.webUi.frontend.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+
+            # Global environment variables
+            {{- with .Values.globalEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           livenessProbe:
             httpGet:
               port: http
@@ -32,9 +62,9 @@ kind: Deployment
             failureThreshold: 30
             periodSeconds: 5
           resources:
-            {{- toYaml .Values.webUiFrontend.resources | nindent 12 }}
+            {{- toYaml .Values.webUi.frontend.resources | nindent 12 }}
           securityContext:
-            {{- toYaml .Values.webUiFrontend.securityContext | nindent 12 }}
+            {{- toYaml .Values.webUi.frontend.securityContext | nindent 12 }}
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
