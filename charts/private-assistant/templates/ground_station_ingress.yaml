@@ -1,3 +1,3 @@
 {{- if .Values.groundStation.ingress.enabled -}}
-{{- include "private-assistant.ingress" (dict "component" "ground-station" "serviceName" "ground-station" "nameSuffix" "" "config" .Values.groundStation.ingress "context" .) }}
+{{- include "private-assistant.ingress" (dict "component" "ground-station" "serviceName" "ground-station" "nameSuffix" "ground-station" "config" .Values.groundStation.ingress "context" .) }}
 {{- end }}
