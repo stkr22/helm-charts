@@ -448,22 +448,19 @@ Returns: comma-separated list like "https://app.example.com,http://dev.example.c
 {{- $origins := list -}}
 {{- if and $ingress.enabled $ingress.hosts -}}
   {{- range $ingress.hosts -}}
+    {{- $currentHost := .host -}}
     {{- $protocol := "http" -}}
     {{- if $ingress.tls -}}
       {{- range $ingress.tls -}}
-        {{- if has $.host .hosts -}}
+        {{- if has $currentHost .hosts -}}
           {{- $protocol = "https" -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
-    {{- $origins = append $origins (printf "%s://%s" $protocol .host) -}}
+    {{- $origins = append $origins (printf "%s://%s" $protocol $currentHost) -}}
   {{- end -}}
 {{- end -}}
-{{- if not $origins -}}
-  http://localhost:3000,http://localhost:5173
-{{- else -}}
-  {{- join "," $origins -}}
-{{- end -}}
+{{- join "," $origins -}}
 {{- end -}}
 
 {{/*
