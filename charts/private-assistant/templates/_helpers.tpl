@@ -417,14 +417,14 @@ Returns: https://app.example.com or http://app.example.com
 {{- end -}}
 
 {{/*
-Derive backend API URL for frontend (VITE_API_URL)
+Derive backend API base URL for frontend (VITE_API_URL)
+Returns just the base URL (protocol + host) - frontend handles the path
 Priority: backend ingress > internal service
 */}}
 {{- define "private-assistant.webui.backendApiUrl" -}}
 {{- $backendIngress := .Values.webUi.backend.ingress -}}
 {{- if and $backendIngress.enabled $backendIngress.hosts -}}
   {{- $firstHost := index $backendIngress.hosts 0 -}}
-  {{- $firstPath := index $firstHost.paths 0 -}}
   {{- $protocol := "http" -}}
   {{- if $backendIngress.tls -}}
     {{- range $backendIngress.tls -}}
@@ -433,9 +433,9 @@ Priority: backend ingress > internal service
       {{- end -}}
     {{- end -}}
   {{- end -}}
-  {{- printf "%s://%s%s/v1" $protocol $firstHost.host $firstPath.path -}}
+  {{- printf "%s://%s" $protocol $firstHost.host -}}
 {{- else -}}
-  {{- include "private-assistant.webui.backendUrl" . -}}/v1
+  {{- include "private-assistant.webui.backendUrl" . -}}
 {{- end -}}
 {{- end -}}
 
