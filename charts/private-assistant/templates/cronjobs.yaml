@@ -42,8 +42,8 @@ spec:
                 {{- end }}
               image: "{{ .image.repository }}:{{ .image.tag | default $.Chart.AppVersion }}"
               imagePullPolicy: {{ .image.pullPolicy }}
-              {{- with .command }}
-              command:
+              {{- with .args }}
+              args:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
               env:

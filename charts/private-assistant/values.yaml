@@ -235,7 +235,7 @@ cronjobs:
   items: []
     # - name: "immich-sync"                          # CronJob name (used for resource naming)
     #   schedule: "0 */6 * * *"                      # Cron schedule expression
-    #   command: ["immich-sync"]                     # Command to run (passed to ENTRYPOINT)
+    #   args: ["immich-sync"]                     # Command to run (passed to ENTRYPOINT)
     #   image:
     #     repository: "ghcr.io/stkr22/private-assistant-picture-display-skill"
     #     tag: "latest"
