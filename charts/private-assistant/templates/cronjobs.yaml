@@ -1,0 +1,60 @@
+{{- range .Values.cronjobs.items }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "private-assistant.fullname" $ }}-{{ .name }}
+  labels:
+    {{- include "private-assistant.labels" $ | nindent 4 }}
+spec:
+  schedule: {{ .schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with $.Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "private-assistant.labels" $ | nindent 12 }}
+            {{- with $.Values.podLabels }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+        spec:
+          {{- if .image.pullSecret }}
+          imagePullSecrets:
+            - name: {{ .image.pullSecret }}
+          {{- end }}
+          serviceAccountName: {{ include "private-assistant.serviceAccountName" $ }}
+          securityContext:
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          restartPolicy: Never
+          containers:
+            - name: {{ .name }}
+              securityContext:
+                {{- if .securityContext }}
+                {{- toYaml .securityContext | nindent 16 }}
+                {{- else }}
+                {{- toYaml $.Values.cronjobs.securityContext | nindent 16 }}
+                {{- end }}
+              image: "{{ .image.repository }}:{{ .image.tag | default $.Chart.AppVersion }}"
+              imagePullPolicy: {{ .image.pullPolicy }}
+              {{- with .command }}
+              command:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              env:
+                {{- include "private-assistant.postgres.env" (dict "component" .name "componentConfig" nil "context" $) | nindent 16 }}
+                {{- with .env }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+                {{- with $.Values.globalEnv }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              resources:
+                {{- toYaml .resources | nindent 16 }}
+---
+{{- end }}

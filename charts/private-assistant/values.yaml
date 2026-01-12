@@ -213,6 +213,50 @@ skills:
     #   resources: {}                             # Optional: Resource requests/limits
     #   env: []                                   # Optional: Additional environment variables
 
+# -- CronJobs Configuration
+# Define periodic jobs that run on a schedule
+cronjobs:
+  # -- Default security context for all cronjobs
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+    seccompProfile:
+      type: RuntimeDefault
+  # -- List of cronjobs to deploy
+  # Each cronjob creates its own CronJob resource
+  # Example:
+  items: []
+    # - name: "immich-sync"                          # CronJob name (used for resource naming)
+    #   schedule: "0 */6 * * *"                      # Cron schedule expression
+    #   command: ["immich-sync"]                     # Command to run (passed to ENTRYPOINT)
+    #   image:
+    #     repository: "ghcr.io/stkr22/private-assistant-picture-display-skill"
+    #     tag: "latest"
+    #     pullPolicy: IfNotPresent
+    #     pullSecret: ""                             # Optional: image pull secret
+    #   env:                                         # Environment variables (flexible format)
+    #     - name: IMMICH_BASE_URL
+    #       valueFrom:
+    #         secretKeyRef:
+    #           name: immich-secret
+    #           key: base-url
+    #     - name: IMMICH_API_KEY
+    #       valueFrom:
+    #         secretKeyRef:
+    #           name: immich-secret
+    #           key: api-key
+    #     - name: MINIO_WRITER_ENDPOINT
+    #       value: "minio.default.svc.cluster.local:9000"
+    #   resources: {}                                # Optional: Resource requests/limits
+    #   securityContext: {}                          # Optional: Override default security context
+
 # -- Override the chart name used for resource naming
 nameOverride: ""
 # -- Override the full name used for resource naming
