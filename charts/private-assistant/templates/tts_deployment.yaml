@@ -13,16 +13,16 @@ kind: Deployment
               value: {{ .Values.ttsEngine.config.ttsModel }}
             - name: ALLOWED_USER_TOKEN
               value: {{ .Values.ttsEngine.config.allowedUserToken }}
-            - name: REDIS_HOST
+            - name: VALKEY_HOST
               value: {{ .Release.Name }}-valkey.{{ .Release.Namespace }}.svc{{ if ne .Values.clusterDomain "" }}.{{ .Values.clusterDomain }}{{ end }}
-            - name: REDIS_PORT
+            - name: VALKEY_PORT
               value: "6379"
             - name: ENABLE_CACHE
               value: {{ .Values.ttsEngine.config.enableCache | default "true" | quote }}
             - name: CACHE_TTL
               value: {{ .Values.ttsEngine.config.cacheTTL | default 604800 | quote }}
             {{- if .Values.valkey.auth.enabled }}
-            - name: REDIS_PASSWORD
+            - name: VALKEY_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-valkey-auth
